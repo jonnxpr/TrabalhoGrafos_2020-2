@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Grafo {
 
 	// Atributos
+	private String nomeGrafo;
 	private final int numeroVertices; // aka numero de aeroportos
 	private int[][] matrizAdjacencia;
 
@@ -85,7 +86,7 @@ public class Grafo {
 	 * @return ArrayList contendo as adjacências de determinado vértice
 	 */
 	public ArrayList<Integer> listaDeAdjacencia(int vertice1) {
-		ArrayList<Integer> listaAdj = new ArrayList();
+		ArrayList<Integer> listaAdj = new ArrayList<>();
 
 		for (int i = 0; i < numeroVertices; i++) {
 			if (matrizAdjacencia[vertice1][i] != 0) {
@@ -138,5 +139,17 @@ public class Grafo {
 	 */
 	public void setMatriz(int[][] matriz) {
 		matrizAdjacencia = matriz;
+	}
+
+	public String getNomeGrafo() {
+		return nomeGrafo;
+	}
+
+	public void setNomeGrafo(String nomeGrafo) {
+		this.nomeGrafo = nomeGrafo;
+	}
+
+	public int[][] getMatriz() {
+		return this.matrizAdjacencia;
 	}
 }

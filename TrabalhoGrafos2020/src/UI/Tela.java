@@ -6,12 +6,16 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +28,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
@@ -32,38 +38,43 @@ import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
+import Algoritmos.ForcaBruta;
+import Algoritmos.Guloso;
+import Algoritmos.Heuristica;
 import DAO.Arquivo;
 import Modelagem.Grafo;
+import Modelagem.Problema;
+import Modelagem.Solucao;
 import Modelagem.Vertice;
 import javafx.util.Pair;
 
 /*
-	Faixa de valores v�lidos
+	Faixa de valores válidos
 
 	Escala 1cm = 38px
 
 	X:
-		26 � o m�ximo
+		26 é o máximo
 
 	Y:
-		12 � o m�ximo
+		12 é o máximo
 */
 
 public class Tela extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5564501739744869121L;
 	private JPanel contentPane;
 	private JPanel painelDoMundo;
 	private JComboBox<String> comboBoxAlgoritmosDisponiveis;
 	private JComboBox<String> comboBoxGrafosDisponiveis;
-	private ArrayList<Pair<String, String>> grafosDisponiveis;
 	private ArrayList<String> algoritmosDisponiveis;
 	private ArrayList<Vertice> aeroportos;
-	private Arquivo DAO;
 	private mxGraph graph;
+	private HashMap<String, Grafo> grafosDisponiveis;
+	private JTextArea txtResposta;
+	private JCheckBox checkDirecionado;
+	private boolean direcionado;
+	private final int[] verticePredecessorLargura;
 
 	/**
 	 * Launch the application.
@@ -85,11 +96,13 @@ public class Tela extends JFrame {
 	 * Create the frame.
 	 */
 	public Tela() {
+		direcionado = false;
 		setAutoRequestFocus(false);
 		setTitle("Trabalho de Grafos - Jonathan Douglas");
 		setResizable(false);
 		initComponents();
 		inicializaMapa();
+		verticePredecessorLargura = new int[4];
 	}
 
 	@SuppressWarnings("deprecation")
@@ -121,8 +134,9 @@ public class Tela extends JFrame {
 		try {
 
 			for (Vertice v : aeroportos) {
-				Object v1 = graph.insertVertex(parent, null, v.getLabelVertice(), Math.abs(v.getLatitude())*escala,
-						Math.abs(v.getLongitude())*escala, 15, 15, "ROUNDED");
+				@SuppressWarnings("unused")
+				Object v1 = graph.insertVertex(parent, null, v.getLabelVertice(), Math.abs(v.getLatitude()) * escala,
+						Math.abs(v.getLongitude()) * escala, 15, 15, "ROUNDED");
 			}
 		} finally {
 			graph.getModel().endUpdate();
@@ -132,10 +146,92 @@ public class Tela extends JFrame {
 		graphComponent.setBounds(0, 0, 1016, 500);
 		graphComponent.setEnabled(false);
 		graphComponent.setBackgroundImage(new ImageIcon(getClass().getResource("/UI/MapaMundo.png")));
-		mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
-		Collection<Object> cells = graphModel.getCells().values();
-		mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
-				mxConstants.NONE);
+		if (!direcionado) {
+			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
+			Collection<Object> cells = graphModel.getCells().values();
+			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
+					mxConstants.NONE);
+		} else {
+			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
+			Collection<Object> cells = graphModel.getCells().values();
+			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.EDGESTYLE_ELBOW,
+					mxConstants.NONE);
+		}
+
+		painelDoMundo.setLayout(null);
+		painelDoMundo.add(graphComponent);
+		painelDoMundo.revalidate();
+		painelDoMundo.repaint();
+	}
+
+	@SuppressWarnings("deprecation")
+	private void criaGrafo(String nomeGrafo) {
+		// Get the components in the panel
+		Component[] componentList = painelDoMundo.getComponents();
+
+		// Loop through the components
+		for (Component c : componentList) {
+
+			// Find the components you want to remove
+			if (c instanceof mxGraphComponent) {
+
+				// Remove it
+				painelDoMundo.remove(c);
+			}
+		}
+
+		painelDoMundo.removeAll();
+		graph.removeCells();
+
+		Grafo grafo = grafosDisponiveis.get(nomeGrafo);
+		graph = new mxGraph();
+		Object parent = graph.getDefaultParent();
+
+		// 1cm ~ 38px
+		int escala = 38;
+
+		ArrayList<Object> verticesA = new ArrayList<>();
+
+		graph.getModel().beginUpdate();
+		try {
+
+			for (Vertice v : aeroportos) {
+				Object v1 = graph.insertVertex(parent, null,
+						v.getLabelVertice() + "(" + v.getValorRepresentativo() + ")",
+						Math.abs(v.getLatitude()) * escala, Math.abs(v.getLongitude()) * escala, 15, 15, "ROUNDED");
+				verticesA.add(v1);
+			}
+
+			int matrizAdj[][] = grafo.getMatriz();
+
+			for (int i = 0; i < grafo.numVertices(); i++) {
+				for (int j = 0; j < grafo.numVertices(); j++) {
+					if (matrizAdj[i][j] != 0) {
+						graph.insertEdge(parent, null, String.valueOf(matrizAdj[i][j]), verticesA.get(i),
+								verticesA.get(j));
+					}
+				}
+			}
+
+		} finally {
+			graph.getModel().endUpdate();
+		}
+
+		mxGraphComponent graphComponent = new mxGraphComponent(graph);
+		graphComponent.setBounds(0, 0, 1016, 500);
+		graphComponent.setEnabled(false);
+		graphComponent.setBackgroundImage(new ImageIcon(getClass().getResource("/UI/MapaMundo.png")));
+		if (!direcionado) {
+			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
+			Collection<Object> cells = graphModel.getCells().values();
+			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
+					mxConstants.NONE);
+		} else {
+			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
+			Collection<Object> cells = graphModel.getCells().values();
+			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.EDGESTYLE_ELBOW,
+					mxConstants.NONE);
+		}
 		painelDoMundo.setLayout(null);
 		painelDoMundo.add(graphComponent);
 		painelDoMundo.revalidate();
@@ -144,7 +240,6 @@ public class Tela extends JFrame {
 
 	private void inicializaMapa() {
 		graph = new mxGraph();
-		Object parent = graph.getDefaultParent();
 
 		mxStylesheet stylesheet = graph.getStylesheet();
 		HashMap<String, Object> style = new HashMap<>();
@@ -153,8 +248,6 @@ public class Tela extends JFrame {
 		style.put(mxConstants.STYLE_FONTCOLOR, "#774400");
 		stylesheet.putCellStyle("ROUNDED", style);
 
-		// 1cm ~ 38px
-		int escala = 38;
 
 		graph.getModel().beginUpdate();
 		try {
@@ -171,18 +264,13 @@ public class Tela extends JFrame {
 		graphComponent.setBounds(0, 0, 1016, 500);
 		graphComponent.setEnabled(false);
 		graphComponent.setBackgroundImage(new ImageIcon(getClass().getResource("/UI/MapaMundo.png")));
-		mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
-		Collection<Object> cells = graphModel.getCells().values();
-		mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
-				mxConstants.NONE);
 		painelDoMundo.setLayout(null);
 		painelDoMundo.add(graphComponent);
 	}
 
 	private void initComponents() {
-		grafosDisponiveis = new ArrayList<>();
+		grafosDisponiveis = new HashMap<>();
 		algoritmosDisponiveis = new ArrayList<>();
-		DAO = new Arquivo();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1360, 720);
@@ -196,29 +284,17 @@ public class Tela extends JFrame {
 		menuBar.add(menuOpcoes);
 
 		JMenuItem menuOpcoesInserirGrafoManualmente = new JMenuItem("Inserir grafo manualmente");
-		menuOpcoesInserirGrafoManualmente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String nomeArq = JOptionPane.showInputDialog("Digite o nome do arquivo com sua respectiva extens�o:");
-
-			}
-		});
 
 		JMenuItem menuOpcaoInserirAeroportos = new JMenuItem("Inserir aeroportos");
 		menuOpcoes.add(menuOpcaoInserirAeroportos);
 		menuOpcoes.add(menuOpcoesInserirGrafoManualmente);
 
 		JMenuItem menuOpcoesGerarGrafoAleatorio = new JMenuItem("Gerar grafo aleat\u00F3rio");
-		menuOpcoesGerarGrafoAleatorio.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+
 		menuOpcoes.add(menuOpcoesGerarGrafoAleatorio);
 
 		JMenuItem menuOpcoesGerarGrafoCompleto = new JMenuItem("Gerar grafo completo");
-		menuOpcoesGerarGrafoCompleto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+
 		menuOpcoes.add(menuOpcoesGerarGrafoCompleto);
 
 		JMenuItem menuOpcaoSalvarGrafosDisponiveis = new JMenuItem("Salvar grafos dispon\u00EDveis");
@@ -231,17 +307,30 @@ public class Tela extends JFrame {
 		menuPersonalizar.add(menuPersonalizarEstiloDoGrafo);
 
 		JMenu menuAjuda = new JMenu("Ajuda");
-		menuAjuda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		menuAjuda.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ImageIcon image = new ImageIcon(getClass().getResource("/UI/interrogation.png"));
+				JOptionPane.showMessageDialog(rootPane,
+						"Consulte a documentação para mais informações sobre o software.", "Ajuda",
+						JOptionPane.INFORMATION_MESSAGE, image);
 			}
 		});
+
 		menuBar.add(menuAjuda);
 
 		JMenu menuSobre = new JMenu("Sobre");
-		menuSobre.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		menuSobre.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ImageIcon image = new ImageIcon(getClass().getResource("/UI/pikaDasGalaxias.png"));
+				JOptionPane.showMessageDialog(rootPane,
+						"Este é um trabalho desenvolvido para a disciplina de Grafos que está sendo ministrada"
+								+ " no Curso de Ciência da Computação da PUCMG (Unidade Coreu) em 2020/2.\n Seu objetivo é trabalhar de forma prática algoritmos relacionados a problemas na área de Grafos.\n",
+						"Sobre", JOptionPane.INFORMATION_MESSAGE, image);
 			}
 		});
+
 		menuBar.add(menuSobre);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -259,20 +348,12 @@ public class Tela extends JFrame {
 		painelControle.setLayout(null);
 
 		JButton botaoExecutar = new JButton("Executar");
-		botaoExecutar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
 
-			}
-		});
 		botaoExecutar.setBounds(79, 31, 176, 55);
 		painelControle.add(botaoExecutar);
 
 		JButton botaoExecutarPassoAPasso = new JButton("Executar passo a passo");
-		botaoExecutarPassoAPasso.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
 
-			}
-		});
 		botaoExecutarPassoAPasso.setBounds(79, 97, 176, 55);
 		painelControle.add(botaoExecutarPassoAPasso);
 
@@ -294,22 +375,41 @@ public class Tela extends JFrame {
 		adicionarAlgoritmosDisponiveis();
 
 		JLabel labelResposta = new JLabel("Resposta");
-		labelResposta.setBounds(837, 22, 73, 14);
+		labelResposta.setBounds(1044, 22, 73, 14);
 		painelControle.add(labelResposta);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(761, 47, 201, 99);
+		scrollPane.setBounds(761, 47, 583, 115);
 		painelControle.add(scrollPane);
 
-		JTextArea txtResposta = new JTextArea();
+		txtResposta = new JTextArea();
+		txtResposta.setColumns(50);
+		txtResposta.setRows(6);
 		txtResposta.setForeground(Color.WHITE);
 		scrollPane.setViewportView(txtResposta);
-		txtResposta.setText("Teste");
 		txtResposta.setFont(new Font("Arial", Font.PLAIN, 12));
 		txtResposta.setBackground(Color.DARK_GRAY);
 		txtResposta.setToolTipText(
 				"Aqui aparecer\u00E1 a resposta do algoritmo em formato de texto, podendo ser copiada.");
 		txtResposta.setEditable(false);
+
+		JButton botaoCarregarGrafo = new JButton("Carregar grafo");
+
+		botaoCarregarGrafo.setBounds(300, 80, 119, 23);
+		painelControle.add(botaoCarregarGrafo);
+
+		checkDirecionado = new JCheckBox("Direcionado?");
+		checkDirecionado.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				if (checkDirecionado.isSelected()) {
+					direcionado = true;
+				} else {
+					direcionado = false;
+				}
+			}
+		});
+		checkDirecionado.setBounds(540, 113, 119, 23);
+		painelControle.add(checkDirecionado);
 
 		JPanel painelAeroportos = new JPanel();
 		painelAeroportos
@@ -323,6 +423,8 @@ public class Tela extends JFrame {
 		painelAeroportos.add(scrollPane_1);
 
 		JTextArea textAreaAeroportos = new JTextArea();
+		textAreaAeroportos.setRows(10000);
+		textAreaAeroportos.setColumns(50);
 		textAreaAeroportos.setEditable(false);
 		textAreaAeroportos.setForeground(Color.WHITE);
 		textAreaAeroportos.setBackground(Color.DARK_GRAY);
@@ -331,27 +433,132 @@ public class Tela extends JFrame {
 		menuOpcaoInserirAeroportos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				textAreaAeroportos.setText("");
+
 				String nomeArq = JOptionPane.showInputDialog(rootPane,
-						"Digite o nome do arquivo com sua respectiva extens�o:");
+						"Digite o nome do arquivo com sua respectiva extensão:");
 				aeroportos = Arquivo.getVertices(nomeArq);
 
 				if (aeroportos.isEmpty()) {
-					JOptionPane.showMessageDialog(rootPane, "Voc� n�o carregou nenhum arquivo ou houve algum erro.");
+					JOptionPane.showMessageDialog(rootPane, "Você não carregou nenhum arquivo ou houve algum erro.");
 				} else {
 					for (Vertice v : aeroportos) {
 						textAreaAeroportos.setText(textAreaAeroportos.getText() + v.toString() + "\n\n");
 					}
-
+					grafosDisponiveis.clear();
+					comboBoxGrafosDisponiveis.removeAllItems();
 					criaGrafo();
+				}
+			}
+		});
+
+		menuOpcoesInserirGrafoManualmente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Grafo grafo = null;
+				if (aeroportos == null || aeroportos.isEmpty()) {
+					JOptionPane.showMessageDialog(rootPane,
+							"Você precisa carregar os aeroportos antes de inserir o grafo.");
+				} else {
+					String nomeArq = JOptionPane
+							.showInputDialog("Digite o nome do arquivo com sua respectiva extensão:");
+					grafo = Arquivo.getGrafoOrientado(nomeArq, aeroportos);
+					if (grafo == null) {
+						JOptionPane.showMessageDialog(rootPane,
+								"Você não inseriu um arquivo válido ou houve algum erro.");
+					} else {
+						addGrafoDisponivel(grafo.getNomeGrafo(), grafo);
+						criaGrafo(grafo.getNomeGrafo());
+					}
+				}
+			}
+		});
+
+		botaoExecutar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (comboBoxGrafosDisponiveis.getSelectedItem() == null) {
+					JOptionPane.showMessageDialog(rootPane, "Não é possível executar sem selecionar um grafo.");
+				} else {
+					execProblemas(String.valueOf(comboBoxAlgoritmosDisponiveis.getSelectedItem()),
+							String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
+				}
+			}
+		});
+
+		botaoExecutarPassoAPasso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+
+		menuOpcoesGerarGrafoAleatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (aeroportos == null || aeroportos.isEmpty()) {
+					JOptionPane.showMessageDialog(rootPane,
+							"Você precisa carregar os aeroportos antes de inserir o grafo.");
+				} else {
+					Grafo grafo = gerarGrafoAleatorio(aeroportos.size());
+					if (grafo == null) {
+						JOptionPane.showMessageDialog(rootPane, "Houve algum erro.");
+					} else {
+						addGrafoDisponivel(grafo.getNomeGrafo(), grafo);
+						criaGrafo(grafo.getNomeGrafo());
+					}
+				}
+			}
+		});
+
+		menuOpcoesGerarGrafoCompleto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (aeroportos == null || aeroportos.isEmpty()) {
+					JOptionPane.showMessageDialog(rootPane,
+							"Você precisa carregar os aeroportos antes de inserir o grafo.");
+				} else {
+					Grafo grafo = gerarGrafoCompleto(aeroportos.size());
+					if (grafo == null) {
+						JOptionPane.showMessageDialog(rootPane, "Houve algum erro.");
+					} else {
+						addGrafoDisponivel(grafo.getNomeGrafo(), grafo);
+						criaGrafo(grafo.getNomeGrafo());
+					}
+				}
+			}
+		});
+
+		botaoCarregarGrafo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (comboBoxGrafosDisponiveis.getSelectedItem() != null) {
+					String nomeGrafo = String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem());
+					criaGrafo(nomeGrafo);
+					Grafo grafo = grafosDisponiveis.get(nomeGrafo);
+					for (int i = 0; i < grafo.numVertices(); i++) {
+						for (int j = 0; j < grafo.numVertices(); j++) {
+							if (direcionado) {
+								if (grafo.getMatriz()[i][j] == grafo.getMatriz()[j][i]) {
+									grafo.getMatriz()[j][i] = 0;
+								}
+							} else {
+								if (grafo.getMatriz()[i][j] != grafo.getMatriz()[j][i]) {
+									if (grafo.getMatriz()[i][j] == 0) {
+										grafo.getMatriz()[i][j] = grafo.getMatriz()[j][i];
+									} else {
+										grafo.getMatriz()[j][i] = grafo.getMatriz()[i][j];
+									}
+								}
+							}
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(rootPane, "Você precisa selecionar um grafo para carregar.");
 				}
 			}
 		});
 
 	}
 
-	private void addGrafoDisponivel(String nomeGrafo, String conteudo) {
-		grafosDisponiveis.add(new Pair(nomeGrafo, conteudo));
-		comboBoxGrafosDisponiveis.addItem(nomeGrafo);
+	private void addGrafoDisponivel(String nomeGrafo, Grafo grafo) {
+		if (!grafosDisponiveis.containsKey(nomeGrafo)) {
+			grafosDisponiveis.put(nomeGrafo, grafo);
+			comboBoxGrafosDisponiveis.addItem(nomeGrafo);
+		}
 	}
 
 	private void addAlgoritmoDisponivel(String nomeAlgoritmo) {
@@ -364,9 +571,12 @@ public class Tela extends JFrame {
 		addAlgoritmoDisponivel("Problema 2");
 		addAlgoritmoDisponivel("Problema 3");
 		addAlgoritmoDisponivel("Problema 4");
+		addAlgoritmoDisponivel("Teste1");
+		addAlgoritmoDisponivel("Teste2");
 	}
 
 	public void removeGrafosDisponiveis() {
+		grafosDisponiveis.clear();
 		comboBoxGrafosDisponiveis.removeAllItems();
 	}
 
@@ -375,18 +585,29 @@ public class Tela extends JFrame {
 	}
 
 	private double getRandomDoubleBetweenRange(double min, double max) {
+
 		double x = (Math.random() * ((max - min) + 1)) + min;
 		return x;
 	}
 
-	/**
-	 * Gera uma matriz com valores aleat�rios entre min e max
-	 * 
-	 * @param grafo cont�m a matriz que vai ser gerada
-	 * @param min   valor m�nimo
-	 * @param max   valor m�ximo
-	 */
 	private void gerarMatrizAleatoria(Grafo grafo, double min, double max) {
+		for (int i = 0; i < grafo.numVertices(); i++) {
+			for (int j = i + 1; j < grafo.numVertices(); j++) {
+				if (i % (int) getRandomDoubleBetweenRange(1, 5) == 0) {
+					grafo.insereArestaNaoOrientada(i, j, (int) getRandomDoubleBetweenRange(min, max));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gera uma matriz com valores aleatórios entre min e max
+	 * 
+	 * @param grafo contém a matriz que vai ser gerada
+	 * @param min   valor mínimo
+	 * @param max   valor máximo
+	 */
+	private void gerarMatrizCompleta(Grafo grafo, double min, double max) {
 		for (int i = 0; i < grafo.numVertices(); i++) {
 			for (int j = i + 1; j < grafo.numVertices(); j++) {
 				grafo.insereArestaNaoOrientada(i, j, (int) getRandomDoubleBetweenRange(min, max));
@@ -394,4 +615,251 @@ public class Tela extends JFrame {
 		}
 	}
 
+	private Grafo gerarGrafoAleatorio(int numVertices) {
+		Grafo grafo = new Grafo(numVertices);
+		grafo.setNomeGrafo("AleatorioTeste" + String.valueOf((int) getRandomDoubleBetweenRange(0, 500)));
+		gerarMatrizAleatoria(grafo, getRandomDoubleBetweenRange(0, 100), getRandomDoubleBetweenRange(101, 1000));
+		return grafo;
+	}
+
+	private Grafo gerarGrafoCompleto(int numVertices) {
+		Grafo grafo = new Grafo(numVertices);
+		grafo.setNomeGrafo("CompletoTeste" + String.valueOf((int) getRandomDoubleBetweenRange(0, 500)));
+		gerarMatrizCompleta(grafo, getRandomDoubleBetweenRange(0, 100), getRandomDoubleBetweenRange(101, 1000));
+		return grafo;
+	}
+
+	private void execProblemas(String labelProblema, String nomeGrafo) {
+		switch (labelProblema) {
+		case "Problema 1":
+			break;
+		case "Problema 2":
+			break;
+		case "Problema 3":
+			break;
+		case "Problema 4":
+			break;
+		case "Teste1":
+			teste1();
+			break;
+		case "Teste2":
+			teste2();
+			break;
+		default:
+			break;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private void execProblema1() {
+
+	}
+	@SuppressWarnings("unused")
+	private void execProblema2() {
+
+	}
+	@SuppressWarnings("unused")
+	private void execProblema3() {
+
+	}
+	@SuppressWarnings("unused")
+	private void execProblema4() {
+
+	}
+
+	private void teste1() {
+
+		int aeroportoInicial = 0; // aeroporto do percurso
+
+		// algoritmos
+		Guloso guloso;
+		ForcaBruta forcaBruta;
+		Heuristica heuristica;
+
+		// problema e solução
+		Problema problema;
+		Solucao solucao;
+
+		Grafo grafo = grafosDisponiveis.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
+
+		long tempoInicial;
+		long tempoFinal;
+
+		problema = new Problema(grafo);
+		guloso = new Guloso(problema);
+		forcaBruta = new ForcaBruta(problema);
+		heuristica = new Heuristica(problema);
+
+		/**
+		 * ************************************* Solução Força bruta Máx cidades: 11
+		 * 
+		 * Comentar trecho de código caso não vá utilizar o algoritmo
+		 *************************************
+		 */
+		tempoInicial = System.currentTimeMillis();
+
+		solucao = forcaBruta.getSolucao(aeroportoInicial);
+
+		tempoFinal = System.currentTimeMillis();
+
+		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
+		solucao.mostrarCaminho();
+
+		txtResposta.setText(
+				"\n\nSolução Força Bruta - Cidade inicial (" + aeroportoInicial + "): " + solucao.getDistanciaTotal());
+
+		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+		System.out.println("");
+
+		/**
+		 * ************************************* Solução Heurística Gulosa Vizinho mais
+		 * próximo
+		 * 
+		 * Comentar trecho de código caso não vá utilizar o algoritmo
+		 *************************************
+		 */
+		tempoInicial = System.currentTimeMillis();
+
+		solucao = guloso.getSolucao(aeroportoInicial);
+
+		tempoFinal = System.currentTimeMillis();
+
+		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
+		solucao.mostrarCaminho();
+
+		txtResposta.setText(
+				txtResposta.getText() + "\n\nSolução Heurística Gulosa(Vizinho mais próximo) - Cidade inicial ("
+						+ aeroportoInicial + "): " + solucao.getDistanciaTotal());
+
+		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+		System.out.println("");
+
+		/**
+		 * ************************************* Solução Heurística Inserção mais barata
+		 * 
+		 * Comentar trecho de código caso não vá utilizar o algoritmo
+		 *************************************
+		 */
+		tempoInicial = System.currentTimeMillis();
+
+		solucao = heuristica.getSolucao(aeroportoInicial);
+
+		tempoFinal = System.currentTimeMillis();
+
+		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
+		solucao.mostrarCaminho();
+
+		txtResposta.setText(txtResposta.getText() + "\n\nSolução Heurística(Inserção mais barata) - Cidade inicial ("
+				+ aeroportoInicial + "): " + solucao.getDistanciaTotal());
+
+		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+	}
+
+	private void teste2() {
+		txtResposta.setText("Existe caminho? -> " + iniciaBuscaEmLargura(0, 2));
+	}
+
+	/**
+	 * ********************************************************************* BUSCA
+	 * EM LARGURA
+	 *********************************************************************
+	 */
+
+	/**
+	 * MÃ©todo iniciaBuscaEmLargura, responsÃ¡vel por inicializar o array de
+	 * vÃ©rtices predecessores a ser preenchido durante a busca.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return booleano indicando se existe um caminho entre o vÃ©rtice inicial e
+	 *         final
+	 */
+	public boolean iniciaBuscaEmLargura(int verticeInicial, int verticeFinal) {
+
+		int tamanhoVetor = verticePredecessorLargura.length;
+
+		// Percorre o vetor de distÃ¢ncias inicializando todas as posiÃ§Ãµes com o valor
+		// V+1
+		for (int i = 0; i < tamanhoVetor; i++) {
+			// diz que o predecessor nÃ£o existe ainda
+			verticePredecessorLargura[i] = -1;
+		}
+		// chama a busca em profundidade
+		return buscaLargura(verticeInicial, verticeFinal);
+	}
+
+	/**
+	 * MÃ©todo buscaLargura, responsÃ¡vel por efetuar a busca em largura a partir de
+	 * um vÃ©rtice inicial atÃ© o vÃ©rtice final utilizando uma fila de vÃ©rtices a
+	 * serem conhecidos e um vetor de vÃ©rtices jÃ¡ visitados.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return
+	 */
+	private boolean buscaLargura(int verticeInicial, int verticeFinal) {
+		Grafo grafo = grafosDisponiveis.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
+		boolean visitados[] = new boolean[grafo.numVertices()];
+
+		// seta os vÃ©rtices como nÃ£o visitados
+		for (int i = 0; i < visitados.length; i++) {
+			visitados[i] = false;
+		}
+
+		// cria a lista de vÃ©rtices a serem conhecidos
+		LinkedList<Integer> fila = new LinkedList<>();
+
+		// marca o vÃ©rtice inicial como visitado
+		visitados[verticeInicial] = true;
+
+		// adiciona o vÃ©rtice inicial na fila de vÃ©rtices conhecidos
+		fila.add(verticeInicial);
+
+		// enquanto a fila de vÃ©rtices conhecidos nÃ£o estiver vazia
+		while (!fila.isEmpty()) {
+			// pega o elemento presente no topo (posiÃ§Ã£o inicial) da fila
+			int v = fila.poll();
+			// System.out.println("vAtual = " + v);
+
+			// obtÃ©m a lista de adjacÃªncia do vÃ©rtice obtido da fila
+			ArrayList<Integer> listaAdj = grafo.listaDeAdjacencia(v);
+
+			// percorre a lista de adjacÃªncia
+			for (int w = 0; w < listaAdj.size(); w++) {
+				// se o vÃ©rtice atual nÃ£o foi visitado ainda, entÃ£o o visite,
+				// marque que foi visitado e o adicione na lista de vÃ©rtices a serem conhecidos
+				// seta tambÃ©m o vÃ©rtice predecessor
+				if (visitados[listaAdj.get(w)] == false) {
+					visitados[listaAdj.get(w)] = true;
+					fila.add(listaAdj.get(w));
+					verticePredecessorLargura[listaAdj.get(w)] = v;
+				}
+			}
+		}
+
+		// retorna se existe um caminho entre o vÃ©rtice final e inicial
+		return (visitados[verticeFinal] == true);
+	}
+
+	/**
+	 * MÃ©todo obtemCaminhoLargura, responsÃ¡vel por obter o caminho enter o
+	 * vÃ©rtice inicial e final da busca baseado no array de vÃ©rtice predecessor
+	 * resultante da busca.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return ArrayList de Pair contendo o caminho obtido da busca em largura entre
+	 *         o vÃ©rtice inicial e final
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ArrayList<Pair<Integer, Integer>> obtemCaminhoLargura(int verticeInicial, int verticeFinal) {
+		ArrayList<Pair<Integer, Integer>> caminho = new ArrayList<>();
+		int controle = verticeFinal;
+
+		while (controle != verticeInicial) {
+			caminho.add(new Pair(verticePredecessorLargura[controle], controle));
+			controle = verticePredecessorLargura[controle];
+		}
+		return caminho;
+	}
 }

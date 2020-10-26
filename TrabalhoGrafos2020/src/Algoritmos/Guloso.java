@@ -1,9 +1,10 @@
 package Algoritmos;
 
+import java.util.ArrayList;
+
 //Importações
 import Modelagem.Problema;
 import Modelagem.Solucao;
-import java.util.ArrayList;
 
 /**
  * Classe Guloso Implementa a heurística gulosa do "vizinho mais próximo"

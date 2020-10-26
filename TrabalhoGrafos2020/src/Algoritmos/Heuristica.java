@@ -1,13 +1,13 @@
 package Algoritmos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
 //Importações
 import Modelagem.Problema;
 import Modelagem.Solucao;
 import javafx.util.Pair;
-
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Arrays;
 
 /**
  * Classe Heuristica Implementa a heurística da "inserção mais barata"
@@ -147,6 +147,7 @@ public class Heuristica {
 	 *
 	 * @param cidadeInicial
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void calculaMenorCaminho(int cidadeInicial) {
 		// Consideramos que para esta heurística funcionar o mínimo de cidades
 		// deve ser 3, pois para o funcionamento da mesma é admitido um caminho

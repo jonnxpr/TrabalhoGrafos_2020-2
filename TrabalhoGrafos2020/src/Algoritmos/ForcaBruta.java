@@ -1,10 +1,11 @@
 package Algoritmos;
 
+import java.util.ArrayList;
+
+import Modelagem.Permutacoes;
 //Importações
 import Modelagem.Problema;
-import Modelagem.Permutacoes;
 import Modelagem.Solucao;
-import java.util.ArrayList;
 
 /**
  * Classe ForcaBruta Implementa o algoritmo de força bruta
@@ -151,6 +152,7 @@ public class ForcaBruta {
 	 *
 	 * @param arrayList
 	 */
+	@SuppressWarnings("unused")
 	private void imprime(ArrayList<int[]> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
 			for (int j = 0; j < arrayList.get(i).length; j++) {

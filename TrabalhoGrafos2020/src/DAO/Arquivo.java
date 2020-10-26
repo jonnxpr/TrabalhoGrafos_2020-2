@@ -6,10 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
-
+import Modelagem.Grafo;
 import Modelagem.Vertice;
-import UI.Tela;
 
 /**
  * Classe Arquivo
@@ -48,6 +46,81 @@ public class Arquivo {
 		}
 
 		return vertices;
+	}
+
+	@SuppressWarnings("resource")
+	public static Grafo getGrafoNaoOrientado(String filename, ArrayList<Vertice> vertices) {
+		Grafo grafo = null;
+		try {
+			File file = new File(filename);
+
+			// tenta fazer abertura do arquivo
+			Scanner in = new Scanner(file);
+
+			int quantVertices = Integer.parseInt(in.nextLine());
+			System.out.println(quantVertices);
+
+			grafo = new Grafo(quantVertices);
+			grafo.setNomeGrafo(filename.substring(0, filename.length() - 4));
+
+			for (int i = 0; i < quantVertices; i++) {
+				String[] buffer = in.nextLine().split(" ");
+				int v1 = findByName(buffer[0], vertices).getValorRepresentativo();
+				int v2 = findByName(buffer[1], vertices).getValorRepresentativo();
+				int peso = Integer.parseInt(buffer[2]);
+				grafo.insereArestaNaoOrientada(v1, v2, peso);
+			}
+
+			in.close();
+
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro na tentativa de ler o arquivo " + filename + ".");
+			// e.printStackTrace();
+		}
+
+		return grafo;
+	}
+
+	@SuppressWarnings("resource")
+	public static Grafo getGrafoOrientado(String filename, ArrayList<Vertice> vertices) {
+		Grafo grafo = null;
+		try {
+			File file = new File(filename);
+
+			// tenta fazer abertura do arquivo
+			Scanner in = new Scanner(file);
+
+			int quantVertices = Integer.parseInt(in.nextLine());
+			System.out.println(quantVertices);
+
+			grafo = new Grafo(quantVertices);
+			grafo.setNomeGrafo(filename.substring(0, filename.length() - 4));
+
+			for (int i = 0; i < quantVertices; i++) {
+				String[] buffer = in.nextLine().split(" ");
+				int v1 = findByName(buffer[0], vertices).getValorRepresentativo();
+				int v2 = findByName(buffer[1], vertices).getValorRepresentativo();
+				int peso = Integer.parseInt(buffer[2]);
+				grafo.insereAresta(v1, v2, peso);
+			}
+
+			in.close();
+
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro na tentativa de ler o arquivo " + filename + ".");
+			// e.printStackTrace();
+		}
+
+		return grafo;
+	}
+
+	public static Vertice findByName(String label, ArrayList<Vertice> vertices) {
+		for (Vertice v : vertices) {
+			if (label.equals(v.getLabelVertice())) {
+				return v;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -144,12 +217,17 @@ public class Arquivo {
 				}
 			}
 
+			in.close();
+
 		} catch (FileNotFoundException exception) {
 			// Caso o arquivo não tenha sido encontrado, retorna mensagem de erro
 			System.out.println("Não foi possível abrir o arquivo " + filename);
 			exception.printStackTrace();
+		} finally {
+			stdin.close();
 		}
-
+		
+		
 		return matriz;
 	}
 

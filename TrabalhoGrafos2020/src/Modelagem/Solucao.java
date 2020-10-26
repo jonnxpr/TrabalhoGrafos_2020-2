@@ -54,6 +54,7 @@ public class Solucao {
 	 *
 	 * @return clone do ArrayList que representa o caminho solução
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<Integer> getCaminho() {
 		return (ArrayList<Integer>) caminho.clone();
 	}
