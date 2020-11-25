@@ -1,6 +1,5 @@
 package Algoritmos;
 
-
 import java.util.ArrayList;
 
 import Modelagem.Permutacoes;
@@ -20,7 +19,7 @@ import Modelagem.Solucao;
  * @author Jonathan Douglas Diego Tavares
  */
 public class ForcaBruta {
-	
+
 	// Atributos
 	private final Problema problema; // atributo que carrega a instância do problema
 	private final Solucao solucao; // atributo que carrega a solução obtida ao final da solução do problema

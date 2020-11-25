@@ -45,6 +45,7 @@ import Algoritmos.ForcaBruta;
 import Algoritmos.Guloso;
 import Algoritmos.Heuristica;
 import Algoritmos.Problema1ForcaBruta;
+import Algoritmos.Problema1Heuristica;
 import DAO.Arquivo;
 import Modelagem.Aresta;
 import Modelagem.Grafo;
@@ -192,9 +193,9 @@ public class Tela extends JFrame {
 		graph.removeCells();
 
 		Grafo grafo = grafosDisponiveis.get(nomeGrafo);
-		//System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
+		// System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
 		grafo.imprimeMatrizAdj();
-		
+
 		graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
 
@@ -214,17 +215,16 @@ public class Tela extends JFrame {
 			}
 
 			Aresta matrizAdj[][] = grafo.getMatriz();
-			Locale locale  = new Locale("en", "ENGLISH");
+			Locale locale = new Locale("en", "ENGLISH");
 			String pattern = "######.##";
-			DecimalFormat df = (DecimalFormat)
-			        NumberFormat.getNumberInstance(locale);
+			DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(locale);
 			df.applyPattern(pattern);
-			
+
 			for (int i = 0; i < grafo.numVertices(); i++) {
 				for (int j = 0; j < grafo.numVertices(); j++) {
 					if (matrizAdj[i][j] != null) {
-						graph.insertEdge(parent, null, String.valueOf(df.format(matrizAdj[i][j].getDistancia())), verticesA.get(i),
-								verticesA.get(j));
+						graph.insertEdge(parent, null, String.valueOf(df.format(matrizAdj[i][j].getDistancia())),
+								verticesA.get(i), verticesA.get(j));
 					}
 				}
 			}
@@ -242,7 +242,7 @@ public class Tela extends JFrame {
 			Collection<Object> cells = graphModel.getCells().values();
 			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
 					mxConstants.NONE);
-		
+
 		} else {
 			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
 			Collection<Object> cells = graphModel.getCells().values();
@@ -264,7 +264,6 @@ public class Tela extends JFrame {
 		style.put(mxConstants.STYLE_OPACITY, 50);
 		style.put(mxConstants.STYLE_FONTCOLOR, "#774400");
 		stylesheet.putCellStyle("ROUNDED", style);
-
 
 		graph.getModel().beginUpdate();
 		try {
@@ -427,21 +426,21 @@ public class Tela extends JFrame {
 		});
 		checkDirecionado.setBounds(540, 113, 119, 23);
 		painelControle.add(checkDirecionado);
-		
+
 		textFieldVerticeInicial = new JTextField();
 		textFieldVerticeInicial.setBounds(286, 142, 86, 20);
 		painelControle.add(textFieldVerticeInicial);
 		textFieldVerticeInicial.setColumns(10);
-		
+
 		textFieldVerticeFinal = new JTextField();
 		textFieldVerticeFinal.setBounds(382, 142, 86, 20);
 		painelControle.add(textFieldVerticeFinal);
 		textFieldVerticeFinal.setColumns(10);
-		
+
 		JLabel labelVerticeInicial = new JLabel("Vértice inicial");
 		labelVerticeInicial.setBounds(286, 117, 86, 14);
 		painelControle.add(labelVerticeInicial);
-		
+
 		JLabel labelVerticeFinal = new JLabel("Vértice final");
 		labelVerticeFinal.setBounds(382, 117, 86, 14);
 		painelControle.add(labelVerticeFinal);
@@ -495,7 +494,8 @@ public class Tela extends JFrame {
 				} else {
 					String nomeArq = JOptionPane
 							.showInputDialog("Digite o nome do arquivo com sua respectiva extensão:");
-					grafo = ((direcionado) ? Arquivo.getGrafoOrientado(nomeArq, aeroportos) : Arquivo.getGrafoNaoOrientado(nomeArq, aeroportos));
+					grafo = ((direcionado) ? Arquivo.getGrafoOrientado(nomeArq, aeroportos)
+							: Arquivo.getGrafoNaoOrientado(nomeArq, aeroportos));
 					grafo.imprimeMatrizAdj();
 					if (grafo == null) {
 						JOptionPane.showMessageDialog(rootPane,
@@ -585,10 +585,14 @@ public class Tela extends JFrame {
 	}
 
 	private void adicionarAlgoritmosDisponiveis() {
-		addAlgoritmoDisponivel("Problema 1");
-		addAlgoritmoDisponivel("Problema 2");
-		addAlgoritmoDisponivel("Problema 3");
-		addAlgoritmoDisponivel("Problema 4");
+		addAlgoritmoDisponivel("Problema 1 - Forca Bruta");
+		addAlgoritmoDisponivel("Problema 1 - Heuristica");
+		addAlgoritmoDisponivel("Problema 2 - Forca Bruta");
+		addAlgoritmoDisponivel("Problema 2 - Heuristica");
+		addAlgoritmoDisponivel("Problema 3 - Forca bruta");
+		addAlgoritmoDisponivel("Problema 3 - Heuristica");
+		addAlgoritmoDisponivel("Problema 4 - Forca Bruta");
+		addAlgoritmoDisponivel("Problema 4 - Heuristica");
 		addAlgoritmoDisponivel("Teste1");
 		addAlgoritmoDisponivel("Teste2");
 	}
@@ -612,7 +616,8 @@ public class Tela extends JFrame {
 		for (int i = 0; i < grafo.numVertices(); i++) {
 			for (int j = i + 1; j < grafo.numVertices(); j++) {
 				if (i % (int) getRandomDoubleBetweenRange(1, 5) == 0) {
-					grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0 , 0), 10000, getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
+					grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0, 0), 10000,
+							getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
 				}
 			}
 		}
@@ -628,7 +633,8 @@ public class Tela extends JFrame {
 	private void gerarMatrizCompleta(Grafo grafo, double min, double max) {
 		for (int i = 0; i < grafo.numVertices(); i++) {
 			for (int j = i + 1; j < grafo.numVertices(); j++) {
-				grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0 , 0), 10000, getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
+				grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0, 0), 10000,
+						getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
 			}
 		}
 	}
@@ -649,18 +655,42 @@ public class Tela extends JFrame {
 
 	private void execProblemas(String labelProblema, String nomeGrafo) {
 		switch (labelProblema) {
-		case "Problema 1":
-			execProblema1();
+		case "Problema 1 - Forca Bruta":
+			execProblema1ForcaBruta();
 			break;
-		case "Problema 2":
+
+		case "Problema 1 - Heuristica":
+			execProblema1Heuristica();
 			break;
-		case "Problema 3":
+
+		case "Problema 2 - Forca Bruta":
+			execProblema2ForcaBruta();
 			break;
-		case "Problema 4":
+
+		case "Problema 2 - Heuristica":
+			execProblema2Heuristica();
 			break;
+
+		case "Problema 3 - Forca Bruta":
+			execProblema3ForcaBruta();
+			break;
+
+		case "Problema 3 - Heuristica":
+			execProblema3Heuristica();
+			break;
+
+		case "Problema 4 - Forca Bruta":
+			execProblema4ForcaBruta();
+			break;
+
+		case "Problema 4 - Heuristica":
+			execProblema4Heuristica();
+			break;
+
 		case "Teste1":
 			teste1();
 			break;
+
 		case "Teste2":
 			teste2();
 			break;
@@ -669,38 +699,43 @@ public class Tela extends JFrame {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void execProblema1() {
-		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null || textFieldVerticeInicial.getText().isEmpty() ||
-				textFieldVerticeFinal.getText().isEmpty() || !isNumeric(textFieldVerticeInicial.getText()) || !isNumeric(textFieldVerticeFinal.getText()) || 
-				Integer.valueOf(textFieldVerticeInicial.getText()) < 0  || Integer.valueOf(textFieldVerticeInicial.getText()) > aeroportos.size()-1 ||
-				Integer.valueOf(textFieldVerticeFinal.getText()) < 0 || Integer.valueOf(textFieldVerticeFinal.getText()) > aeroportos.size()-1 ) {
-			JOptionPane.showMessageDialog(rootPane, "Você deve preencher o vértice inicial e final com valores válidos.");
+	private void execProblema1ForcaBruta() {
+		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null
+				|| textFieldVerticeInicial.getText().isEmpty() || textFieldVerticeFinal.getText().isEmpty()
+				|| !isNumeric(textFieldVerticeInicial.getText()) || !isNumeric(textFieldVerticeFinal.getText())
+				|| Integer.valueOf(textFieldVerticeInicial.getText()) < 0
+				|| Integer.valueOf(textFieldVerticeInicial.getText()) > aeroportos.size() - 1
+				|| Integer.valueOf(textFieldVerticeFinal.getText()) < 0
+				|| Integer.valueOf(textFieldVerticeFinal.getText()) > aeroportos.size() - 1) {
+			JOptionPane.showMessageDialog(rootPane,
+					"Você deve preencher o vértice inicial e final com valores válidos.");
 			return;
 		}
-		
-		if(iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()), Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
-			JOptionPane.showMessageDialog(rootPane, "Não é possível fazer a operação desejada pois não existe um caminho entre o vertice inicial e final.");
+
+		if (iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()),
+				Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
+			JOptionPane.showMessageDialog(rootPane,
+					"Não é possível fazer a operação desejada pois não existe um caminho entre o vertice inicial e final.");
 			return;
 		}
-		
+
 		int aeroportoInicial = Integer.parseInt(textFieldVerticeInicial.getText());
 		int aeroportoFinal = Integer.parseInt(textFieldVerticeFinal.getText());
-		
+
 		Problema1ForcaBruta forcaBruta1;
-		
+
 		Problema problema;
 		Solucao solucao;
-		
+
 		Grafo grafo = grafosDisponiveis.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
-		
+
 		long tempoInicial;
 		long tempoFinal;
-		
+
 		problema = new Problema(grafo);
-		
+
 		forcaBruta1 = new Problema1ForcaBruta(problema);
-		
+
 		tempoInicial = System.currentTimeMillis();
 
 		solucao = forcaBruta1.getSolucao(aeroportoInicial, aeroportoFinal);
@@ -710,25 +745,94 @@ public class Tela extends JFrame {
 		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
 		solucao.mostrarCaminho();
 		txtResposta.setText("\n\nSolução = " + solucao.getCaminho());
-		txtResposta.setText(txtResposta.getText() + 
-				"\n\nSolução Força Bruta - Cidade inicial (" + aeroportoInicial + "): " + solucao.getDistanciaTotal());
+		txtResposta.setText(txtResposta.getText() + "\n\nSolução Força Bruta - Cidade inicial (" + aeroportoInicial
+				+ "): " + solucao.getDistanciaTotal());
 
 		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
 		System.out.println("");
-		
-	}
-	@SuppressWarnings("unused")
-	private void execProblema2() {
 
 	}
-	@SuppressWarnings("unused")
-	private void execProblema3() {
 
-	}
-	@SuppressWarnings("unused")
-	private void execProblema4() {
+	private void execProblema1Heuristica() {
+		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null
+				|| textFieldVerticeInicial.getText().isEmpty() || textFieldVerticeFinal.getText().isEmpty()
+				|| !isNumeric(textFieldVerticeInicial.getText()) || !isNumeric(textFieldVerticeFinal.getText())
+				|| Integer.valueOf(textFieldVerticeInicial.getText()) < 0
+				|| Integer.valueOf(textFieldVerticeInicial.getText()) > aeroportos.size() - 1
+				|| Integer.valueOf(textFieldVerticeFinal.getText()) < 0
+				|| Integer.valueOf(textFieldVerticeFinal.getText()) > aeroportos.size() - 1) {
+			JOptionPane.showMessageDialog(rootPane,
+					"Você deve preencher o vértice inicial e final com valores válidos.");
+			return;
+		}
 
+		if (iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()),
+				Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
+			JOptionPane.showMessageDialog(rootPane,
+					"Não é possível fazer a operação desejada pois não existe um caminho entre o vertice inicial e final.");
+			return;
+		}
+
+		int aeroportoInicial = Integer.parseInt(textFieldVerticeInicial.getText());
+		int aeroportoFinal = Integer.parseInt(textFieldVerticeFinal.getText());
+
+		Problema1Heuristica heuristica1;
+
+		Problema problema;
+		Solucao solucao;
+
+		Grafo grafo = grafosDisponiveis.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
+
+		long tempoInicial;
+		long tempoFinal;
+
+		problema = new Problema(grafo);
+
+		heuristica1 = new Problema1Heuristica(problema);
+
+		tempoInicial = System.currentTimeMillis();
+
+		solucao = heuristica1.getSolucao(aeroportoInicial, aeroportoFinal);
+
+		tempoFinal = System.currentTimeMillis();
+
+		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
+		solucao.mostrarCaminho();
+		txtResposta.setText("\n\nSolução = " + solucao.getCaminho());
+		txtResposta.setText(txtResposta.getText() + "\n\nSolução Heurística - Cidade inicial (" + aeroportoInicial
+				+ "): " + solucao.getDistanciaTotal());
+
+		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+		System.out.println("");
 	}
+
+	@SuppressWarnings("unused")
+	private void execProblema2ForcaBruta() {
+		System.out.println("2 forca bruta");
+	}
+	
+	private void execProblema2Heuristica() {
+		System.out.println("2 heuristica");
+	}
+
+	@SuppressWarnings("unused")
+	private void execProblema3ForcaBruta() {
+		System.out.println("3 forca bruta");
+	}
+	
+	private void execProblema3Heuristica() {
+		System.out.println("3 heuristica");
+	}
+
+	@SuppressWarnings("unused")
+	private void execProblema4ForcaBruta() {
+		System.out.println("4 forca bruta");
+	}
+	
+	private void execProblema4Heuristica() {
+		System.out.println("4 heuristica");
+	}
+
 
 	private void teste1() {
 
@@ -925,16 +1029,16 @@ public class Tela extends JFrame {
 		}
 		return caminho;
 	}
-	
+
 	private boolean isNumeric(String strNum) {
-	    if (strNum == null) {
-	        return false;
-	    }
-	    try {
-	        double d = Double.parseDouble(strNum);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
+		if (strNum == null) {
+			return false;
+		}
+		try {
+			double d = Double.parseDouble(strNum);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 }

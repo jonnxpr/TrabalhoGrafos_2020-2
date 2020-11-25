@@ -50,7 +50,8 @@ public class Grafo {
 	public void insereAresta(Vertice vertice1, Vertice vertice2, int altitude, double distancia, int preco) {
 		// adiciona na posição [v1][v2] o valor do peso correspondente a aresta
 		// adicionada
-		matrizAdjacencia[vertice1.getValorRepresentativo()][vertice2.getValorRepresentativo()] = new Aresta(vertice1, vertice2, altitude, distancia, preco);
+		matrizAdjacencia[vertice1.getValorRepresentativo()][vertice2.getValorRepresentativo()] = new Aresta(vertice1,
+				vertice2, altitude, distancia, preco);
 	}
 
 	/**
@@ -61,7 +62,8 @@ public class Grafo {
 	 * @param vertice2
 	 * @param peso
 	 */
-	public void insereArestaNaoOrientada(Vertice vertice1, Vertice vertice2, int altitude, double distancia, int preco) {
+	public void insereArestaNaoOrientada(Vertice vertice1, Vertice vertice2, int altitude, double distancia,
+			int preco) {
 		insereAresta(vertice1, vertice2, altitude, distancia, preco);
 		insereAresta(vertice2, vertice1, altitude, distancia, preco);
 	}
@@ -107,11 +109,13 @@ public class Grafo {
 	public int getAltitude(int vertice1, int vertice2) {
 		return this.matrizAdjacencia[vertice1][vertice2].getAltitude();
 	}
-	
+
 	public double getDistancia(int vertice1, int vertice2) {
-		return (this.matrizAdjacencia[vertice1][vertice2] != null) ? this.matrizAdjacencia[vertice1][vertice2].getDistancia() : 0;
+		return (this.matrizAdjacencia[vertice1][vertice2] != null)
+				? this.matrizAdjacencia[vertice1][vertice2].getDistancia()
+				: 0;
 	}
-	
+
 	public int getPreco(int vertice1, int vertice2) {
 		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
 	}
@@ -125,7 +129,8 @@ public class Grafo {
 		for (int i = 0; i < numeroVertices; i++) {
 			for (int j = 0; j < numeroVertices; j++) {
 				if (matrizAdjacencia[i][j] != null) {
-					System.out.print(matrizAdjacencia[i][j].getV1().getLabelVertice() + matrizAdjacencia[i][j].getV2().getLabelVertice() + "                 ");
+					System.out.print(matrizAdjacencia[i][j].getV1().getLabelVertice()
+							+ matrizAdjacencia[i][j].getV2().getLabelVertice() + "                 ");
 				} else {
 					System.out.print("-1                 ");
 				}

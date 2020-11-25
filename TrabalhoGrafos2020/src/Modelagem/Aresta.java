@@ -6,7 +6,7 @@ public class Aresta {
 	private int altitude;
 	private double distancia;
 	private int preco;
-	
+
 	public Aresta(Vertice v1, Vertice v2) {
 		this.v1 = v1;
 		this.v2 = v2;
@@ -14,7 +14,7 @@ public class Aresta {
 		this.distancia = -1;
 		this.preco = -1;
 	}
-	
+
 	public Aresta(Vertice v1, Vertice v2, int altitude, double distancia, int preco) {
 		this.v1 = v1;
 		this.v2 = v2;
@@ -22,7 +22,7 @@ public class Aresta {
 		this.distancia = distancia;
 		this.preco = preco;
 	}
-	
+
 	public Vertice getV1() {
 		return v1;
 	}
@@ -62,7 +62,7 @@ public class Aresta {
 	public void setPreco(int preco) {
 		this.preco = preco;
 	}
-	
+
 	@Override
 	public String toString() {
 		String aresta = "V1: " + this.v1;

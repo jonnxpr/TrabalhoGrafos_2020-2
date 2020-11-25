@@ -66,12 +66,13 @@ public class Arquivo {
 
 			for (int i = 0; i < quantVertices; i++) {
 				String[] buffer = in.nextLine().split(" ");
-				Vertice v1 = new Vertice(buffer[0], findByName(buffer[0], vertices).getValorRepresentativo(), findByName(buffer[0], vertices).getLatitude(),
-						findByName(buffer[0], vertices).getLongitude()) ;
-				Vertice v2 = new Vertice(buffer[1], findByName(buffer[1], vertices).getValorRepresentativo(), findByName(buffer[1], vertices).getLatitude(),
-						findByName(buffer[1], vertices).getLongitude()) ;
+				Vertice v1 = new Vertice(buffer[0], findByName(buffer[0], vertices).getValorRepresentativo(),
+						findByName(buffer[0], vertices).getLatitude(), findByName(buffer[0], vertices).getLongitude());
+				Vertice v2 = new Vertice(buffer[1], findByName(buffer[1], vertices).getValorRepresentativo(),
+						findByName(buffer[1], vertices).getLatitude(), findByName(buffer[1], vertices).getLongitude());
 				int preco = Integer.parseInt(buffer[2]);
-				grafo.insereArestaNaoOrientada(v1, v2, 10000, Problema.distance(v1.getLatitude(), v1.getLongitude(), v2.getLatitude(), v2.getLongitude(), "K"), preco);
+				grafo.insereArestaNaoOrientada(v1, v2, 10000, Problema.distance(v1.getLatitude(), v1.getLongitude(),
+						v2.getLatitude(), v2.getLongitude(), "K"), preco);
 			}
 
 			in.close();
@@ -101,12 +102,13 @@ public class Arquivo {
 
 			for (int i = 0; i < quantVertices; i++) {
 				String[] buffer = in.nextLine().split(" ");
-				Vertice v1 = new Vertice(buffer[0], findByName(buffer[0], vertices).getValorRepresentativo(), findByName(buffer[0], vertices).getLatitude(),
-						findByName(buffer[0], vertices).getLongitude()) ;
-				Vertice v2 = new Vertice(buffer[1], findByName(buffer[1], vertices).getValorRepresentativo(), findByName(buffer[1], vertices).getLatitude(),
-						findByName(buffer[1], vertices).getLongitude()) ;
+				Vertice v1 = new Vertice(buffer[0], findByName(buffer[0], vertices).getValorRepresentativo(),
+						findByName(buffer[0], vertices).getLatitude(), findByName(buffer[0], vertices).getLongitude());
+				Vertice v2 = new Vertice(buffer[1], findByName(buffer[1], vertices).getValorRepresentativo(),
+						findByName(buffer[1], vertices).getLatitude(), findByName(buffer[1], vertices).getLongitude());
 				int preco = Integer.parseInt(buffer[2]);
-				grafo.insereAresta(v1, v2, 10000, Problema.distance(v1.getLatitude(), v1.getLongitude(), v2.getLatitude(), v2.getLongitude(), "K"), preco);
+				grafo.insereAresta(v1, v2, 10000, Problema.distance(v1.getLatitude(), v1.getLongitude(),
+						v2.getLatitude(), v2.getLongitude(), "K"), preco);
 			}
 
 			in.close();
@@ -231,8 +233,7 @@ public class Arquivo {
 		} finally {
 			stdin.close();
 		}
-		
-		
+
 		return matriz;
 	}
 

@@ -14,7 +14,7 @@ public class Vertice {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
-	
+
 	public Vertice(int valorRepresentativo, double latitude, double longitude) {
 		this.labelVertice = "NoLabel";
 		this.valorRepresentativo = valorRepresentativo;
@@ -22,8 +22,6 @@ public class Vertice {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
-	
-	
 
 	public String getLabelVertice() {
 		return labelVertice;
