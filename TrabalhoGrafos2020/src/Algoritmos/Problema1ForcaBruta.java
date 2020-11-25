@@ -45,13 +45,13 @@ public class Problema1ForcaBruta {
 	 * @param cidadeInicial
 	 * @return vetor de inteiros contendo a permutação gerada
 	 */
-	private int[] geraPermutacaoInicial(int cidadeInicial) {
+	private int[] geraPermutacaoInicial(int aeroportoInicial) {
 		int permutacao[] = new int[problema.getGrafo().numVertices() - 1];
 		int i = 0;
 		int pos = 0;
 
 		while (i < permutacao.length + 1) {
-			if (i != cidadeInicial) {
+			if (i != aeroportoInicial) {
 				permutacao[pos] = i;
 				pos++;
 				i++;
@@ -160,7 +160,13 @@ public class Problema1ForcaBruta {
 		// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
 		// para a mesma
 		ArrayList<int[]> caminhosDesejados = removerPermIndesejada(aeroportoInicial, aeroportoFinal, caminhos);
+		System.out.println("\n\nCaminhos Des: \n\n");
+		System.out.println("\n\nCaminhos Comp: \n\n");
+		imprime(caminhosDesejados);
 		caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
+		imprime(caminhosDesejados);
+		System.out.println("tamDesej =" + caminhosDesejados.size() );
+		System.out.println(caminhosDesejados.isEmpty());
 
 		int menorCaminho[] = caminhosDesejados.get(0);
 		ArrayList<Integer> menorCaminhoList = new ArrayList<>();
