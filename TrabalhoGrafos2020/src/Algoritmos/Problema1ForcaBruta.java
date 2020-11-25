@@ -73,14 +73,18 @@ public class Problema1ForcaBruta {
 	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
 	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
 	 */
-	private ArrayList<int[]> completarCaminhos(int cidadeInicial, ArrayList<int[]> array) {
+	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
 		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
 		for (int i = 0; i < array.size(); i++) {
-			int aux[] = new int[problema.getGrafo().numVertices() + 1];
-			aux[0] = cidadeInicial;
-			aux[aux.length - 1] = cidadeInicial;
+			int aux[] = new int[problema.getGrafo().numVertices()];
+			aux[0] = aeroportoInicial;
+			//aux[aux.length - 1] = aeroportoFinal;
 
 			for (int j = 1; j < array.get(i).length + 1; j++) {
+				if (array.get(i)[j - 1] == aeroportoFinal) {
+					aux[j] = array.get(i)[j - 1];
+					break;
+				}
 				aux[j] = array.get(i)[j - 1];
 			}
 
@@ -88,6 +92,38 @@ public class Problema1ForcaBruta {
 		}
 
 		return caminhosCompletos;
+	}
+	
+	private ArrayList<int[]> removerPermIndesejada(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
+		
+		for (int i = 0; i < array.size(); i++) {
+			for (int j = 0; j < problema.getGrafo().numVertices()-2; j++) {
+				System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " + array.get(i)[j+1]);
+				System.out.println(problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j+1]));
+				//System.out.println("\n i = " + i + " Antes");
+				//imprime(array);
+				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j+1]) ||
+						!problema.getGrafo().existeAresta(array.get(i)[j+1], array.get(i)[j])) {
+					System.out.println("vetor removido: ");
+					imprimeVetor(array.get(i));
+					array.remove(array.get(i));
+					System.out.println("\n i = " + i + " Depois");
+					i--;
+					imprime(array);
+					break;
+				}
+			}
+		}
+		//System.out.println("\nT2\n");
+		//imprime(array);
+		return array;
+	}
+	
+	private void imprimeVetor(int [] vetor) {
+		for (int i = 0; i < vetor.length; i++) {
+			System.out.print(vetor[i] + " ");
+		}
+		System.out.println();
 	}
 
 	/**
@@ -97,10 +133,13 @@ public class Problema1ForcaBruta {
 	 * @param caminho
 	 * @return inteiro representando a distância total obtida no caminho
 	 */
-	private double getDistanciaCaminho(int[] caminho) {
+	private double getDistanciaCaminho(int[] caminho, int aeroportoFinal) {
 		double distancia = 0;
 
-		for (int i = 0; i < caminho.length - 1; i++) {
+		for (int i = 0; i < caminho.length-1; i++) {
+			if (caminho[i] == aeroportoFinal) {
+				return distancia;
+			}
 			distancia = distancia + problema.getDistancia(caminho[i], caminho[i + 1]);
 		}
 
@@ -113,38 +152,45 @@ public class Problema1ForcaBruta {
 	 *
 	 * @param cidadeInicial
 	 */
-	private void calculaMenorCaminho(int cidadeInicial) {
+	private void calculaMenorCaminho(int aeroportoInicial, int aeroportoFinal) {
 		// gera todas as permutações
-		caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(cidadeInicial));
-		// imprime(caminhos);
+		System.out.println("aeroInicial = " + aeroportoInicial + "\naeroFinal =" + aeroportoFinal);
+		caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
+		System.out.println("\n\nperminiciais\n\n");
+		imprime(caminhos);
 		// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
 		// para a mesma
-		ArrayList<int[]> caminhosCompletos = completarCaminhos(cidadeInicial, caminhos);
+		ArrayList<int[]> caminhosDesejados = removerPermIndesejada(aeroportoInicial, aeroportoFinal, caminhos);
+		caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
 
-		int menorCaminho[] = caminhosCompletos.get(0);
+		int menorCaminho[] = caminhosDesejados.get(0);
 		ArrayList<Integer> menorCaminhoList = new ArrayList<>();
-		// imprime(caminhosCompletos);
+		//imprime(caminhosDesejados);
 
 		// percorre o conjunto de caminhos comparando suas distâncias totais
 		// o menor caminho será aquele cuja distância total tenha o menor valor dentre
 		// o conjunto verificado
-		for (int i = 1; i < caminhosCompletos.size(); i++) {
-			if (getDistanciaCaminho(caminhosCompletos.get(i)) < getDistanciaCaminho(menorCaminho)) {
-				menorCaminho = caminhosCompletos.get(i);
+		for (int i = 1; i < caminhosDesejados.size(); i++) {
+			if (getDistanciaCaminho(caminhosDesejados.get(i), aeroportoFinal) < getDistanciaCaminho(menorCaminho, aeroportoFinal)) {
+				menorCaminho = caminhosDesejados.get(i);
 			}
 		}
 
 		// passa os vértices obtidos do menor caminho para um ArrayList que será
 		// passado para a solução
 		for (int i = 0; i < menorCaminho.length; i++) {
+			if (menorCaminho[i] == aeroportoFinal) {
+				menorCaminhoList.add(menorCaminho[i]);
+				break;
+			}
 			menorCaminhoList.add(menorCaminho[i]);
 		}
 
 		// seta o melhor caminho obtido na solução
 		solucao.setCaminho(menorCaminhoList);
-		// solucao.mostrarCaminho();
+		 //solucao.mostrarCaminho();
 		// seta a distância total obtida no melhor caminho
-		solucao.setDistanciaTotal(getDistanciaCaminho(menorCaminho));
+		solucao.setDistanciaTotal(getDistanciaCaminho(menorCaminho, aeroportoFinal));
 	}
 
 	/**
@@ -169,8 +215,8 @@ public class Problema1ForcaBruta {
 	 * @param cidadeInicial
 	 * @return solução obtida após o calculo do melhor caminho
 	 */
-	public Solucao getSolucao(int cidadeInicial) {
-		calculaMenorCaminho(cidadeInicial);
+	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
+		calculaMenorCaminho(aeroportoInicial, aeroportoFinal);
 		return solucao;
 	}
 }

@@ -8,10 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -41,6 +44,7 @@ import com.mxgraph.view.mxStylesheet;
 import Algoritmos.ForcaBruta;
 import Algoritmos.Guloso;
 import Algoritmos.Heuristica;
+import Algoritmos.Problema1ForcaBruta;
 import DAO.Arquivo;
 import Modelagem.Aresta;
 import Modelagem.Grafo;
@@ -188,7 +192,7 @@ public class Tela extends JFrame {
 		graph.removeCells();
 
 		Grafo grafo = grafosDisponiveis.get(nomeGrafo);
-		System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
+		//System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
 		grafo.imprimeMatrizAdj();
 		
 		graph = new mxGraph();
@@ -210,11 +214,16 @@ public class Tela extends JFrame {
 			}
 
 			Aresta matrizAdj[][] = grafo.getMatriz();
-
+			Locale locale  = new Locale("en", "ENGLISH");
+			String pattern = "######.##";
+			DecimalFormat df = (DecimalFormat)
+			        NumberFormat.getNumberInstance(locale);
+			df.applyPattern(pattern);
+			
 			for (int i = 0; i < grafo.numVertices(); i++) {
 				for (int j = 0; j < grafo.numVertices(); j++) {
 					if (matrizAdj[i][j] != null) {
-						graph.insertEdge(parent, null, String.valueOf(matrizAdj[i][j].getPreco()), verticesA.get(i),
+						graph.insertEdge(parent, null, String.valueOf(df.format(matrizAdj[i][j].getDistancia())), verticesA.get(i),
 								verticesA.get(j));
 					}
 				}
@@ -641,6 +650,7 @@ public class Tela extends JFrame {
 	private void execProblemas(String labelProblema, String nomeGrafo) {
 		switch (labelProblema) {
 		case "Problema 1":
+			execProblema1();
 			break;
 		case "Problema 2":
 			break;
@@ -661,6 +671,50 @@ public class Tela extends JFrame {
 
 	@SuppressWarnings("unused")
 	private void execProblema1() {
+		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null || textFieldVerticeInicial.getText().isEmpty() ||
+				textFieldVerticeFinal.getText().isEmpty() || !isNumeric(textFieldVerticeInicial.getText()) || !isNumeric(textFieldVerticeFinal.getText()) || 
+				Integer.valueOf(textFieldVerticeInicial.getText()) < 0  || Integer.valueOf(textFieldVerticeInicial.getText()) > aeroportos.size()-1 ||
+				Integer.valueOf(textFieldVerticeFinal.getText()) < 0 || Integer.valueOf(textFieldVerticeFinal.getText()) > aeroportos.size()-1 ) {
+			JOptionPane.showMessageDialog(rootPane, "Você deve preencher o vértice inicial e final com valores válidos.");
+			return;
+		}
+		
+		if(iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()), Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
+			JOptionPane.showMessageDialog(rootPane, "Não é possível fazer a operação desejada pois não existe um caminho entre o vertice inicial e final.");
+			return;
+		}
+		
+		int aeroportoInicial = Integer.parseInt(textFieldVerticeInicial.getText());
+		int aeroportoFinal = Integer.parseInt(textFieldVerticeFinal.getText());
+		
+		Problema1ForcaBruta forcaBruta1;
+		
+		Problema problema;
+		Solucao solucao;
+		
+		Grafo grafo = grafosDisponiveis.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem()));
+		
+		long tempoInicial;
+		long tempoFinal;
+		
+		problema = new Problema(grafo);
+		
+		forcaBruta1 = new Problema1ForcaBruta(problema);
+		
+		tempoInicial = System.currentTimeMillis();
+
+		solucao = forcaBruta1.getSolucao(aeroportoInicial, aeroportoFinal);
+
+		tempoFinal = System.currentTimeMillis();
+
+		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
+		solucao.mostrarCaminho();
+		txtResposta.setText("\n\nSolução = " + solucao.getCaminho());
+		txtResposta.setText(txtResposta.getText() + 
+				"\n\nSolução Força Bruta - Cidade inicial (" + aeroportoInicial + "): " + solucao.getDistanciaTotal());
+
+		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+		System.out.println("");
 		
 	}
 	@SuppressWarnings("unused")
@@ -870,5 +924,17 @@ public class Tela extends JFrame {
 			controle = verticePredecessorLargura[controle];
 		}
 		return caminho;
+	}
+	
+	private boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        double d = Double.parseDouble(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 }
