@@ -14,6 +14,16 @@ public class Vertice {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
+	
+	public Vertice(int valorRepresentativo, double latitude, double longitude) {
+		this.labelVertice = "NoLabel";
+		this.valorRepresentativo = valorRepresentativo;
+		this.grau = 0;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
+	
 
 	public String getLabelVertice() {
 		return labelVertice;
@@ -61,6 +71,7 @@ public class Vertice {
 		vertice += "\nAeroporto: " + this.labelVertice;
 		vertice += "\nLatitude: " + this.latitude;
 		vertice += "\nLongitude: " + this.longitude;
+		vertice += "\n";
 		return vertice;
 	}
 }

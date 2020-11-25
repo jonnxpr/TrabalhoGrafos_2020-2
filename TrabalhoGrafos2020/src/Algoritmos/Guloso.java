@@ -66,7 +66,7 @@ public class Guloso {
 		// atual)
 		int cidadeAtual = cidadeInicial;
 		int cidadeMaisProxima;
-		int distanciaTotal = 0; // distancia total obtida no percurso
+		double distanciaTotal = 0; // distancia total obtida no percurso
 		int verticeDeMenorAresta; // vértice cujo peso é o menor a patir do vértice atual
 		int nCidades = problema.getGrafo().numVertices(); // obtém a quantidade de cidades do problema
 

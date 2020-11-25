@@ -60,8 +60,8 @@ public class Heuristica {
 	 * @param caminho
 	 * @return inteiro representando a distância total obtida no caminho
 	 */
-	private int getDistanciaCaminho(Integer[] caminho) {
-		int distancia = 0;
+	private double getDistanciaCaminho(Integer[] caminho) {
+		double distancia = 0;
 
 		for (int i = 0; i < caminho.length - 1; i++) {
 			distancia = distancia + problema.getDistancia(caminho[i], caminho[i + 1]);
@@ -92,8 +92,8 @@ public class Heuristica {
 	 * @param tabela
 	 * @return Pair contendo o percurso do menor custo e o respectivo custo.
 	 */
-	private Pair<Integer[], Integer> getMelhorOpcao(ArrayList<Pair<Integer[], Integer>> tabela) {
-		Pair<Integer[], Integer> melhorOpcao = tabela.get(0);
+	private Pair<Integer[], Double> getMelhorOpcao(ArrayList<Pair<Integer[], Double>> tabela) {
+		Pair<Integer[], Double> melhorOpcao = tabela.get(0);
 
 		for (int i = 1; i < tabela.size(); i++) {
 			if (tabela.get(i).getValue() < melhorOpcao.getValue()) {
@@ -112,7 +112,7 @@ public class Heuristica {
 	 * @param melhorOpcao
 	 * @param caminho
 	 */
-	private void insereMelhorOpcaoNoCaminho(Pair<Integer[], Integer> melhorOpcao, ArrayList<Integer> caminho) {
+	private void insereMelhorOpcaoNoCaminho(Pair<Integer[], Double> melhorOpcao, ArrayList<Integer> caminho) {
 		/*
 		 * System.out.print("->->"); for (Integer i : caminho){ System.out.print (i +
 		 * " "); } System.out.println("-");
@@ -159,7 +159,7 @@ public class Heuristica {
 
 		ArrayList<Integer> caminho = new ArrayList<>(); // representa o melhor caminho
 		ArrayList<Integer> naoVisitados = new ArrayList<>(); // conjunto de cidades não visitadas
-		ArrayList<Pair<Integer[], Integer>> tabelaTemp = new ArrayList<>(); // tabela de custos
+		ArrayList<Pair<Integer[], Double>> tabelaTemp = new ArrayList<>(); // tabela de custos
 
 		// gera o caminho inicial contendo 3 cidades, incluindo a cidade inicial
 		geraCaminhoInicial(caminho, cidadeInicial);
@@ -195,7 +195,7 @@ public class Heuristica {
 							// k -> cidade ainda não visitada
 							// j -> cidade da iteração atual que é obrigatoriamente diferente da cidade
 							// da primeira iteração
-							int custo = problema.getDistancia(visitado, naoVisitado)
+							double custo = problema.getDistancia(visitado, naoVisitado)
 									+ problema.getDistancia(naoVisitado, segVisitado)
 									- problema.getDistancia(visitado, segVisitado);
 							// armazena o custo atual e o percurso (i->k->j)
@@ -211,7 +211,7 @@ public class Heuristica {
 			}
 
 			// obtém da tabela de custos o percurso cujo custo de inserção é o menor
-			Pair<Integer[], Integer> melhorOpcao = getMelhorOpcao(tabelaTemp);
+			Pair<Integer[], Double> melhorOpcao = getMelhorOpcao(tabelaTemp);
 			// faz a inserção da cidade cujo custo de inserção é o menor
 			insereMelhorOpcaoNoCaminho(melhorOpcao, caminho);
 			// reinicializa a tabela de custos e o conjunto de cidades não visitadas

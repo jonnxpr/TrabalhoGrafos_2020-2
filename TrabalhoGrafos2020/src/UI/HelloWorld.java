@@ -11,6 +11,7 @@ public class HelloWorld extends JFrame
 	/**
 	 * 
 	 */
+	/*
 	private static final long serialVersionUID = -2707712944901661771L;
 
 	public HelloWorld()
@@ -45,5 +46,5 @@ public class HelloWorld extends JFrame
 		frame.setSize(400, 320);
 		frame.setVisible(true);
 	}
-
+	*/
 }

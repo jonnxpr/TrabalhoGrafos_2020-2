@@ -19,7 +19,7 @@ import Modelagem.Solucao;
  *
  * @author Jonathan Douglas Diego Tavares
  */
-public class ForcaBruta {
+public class Problema1ForcaBruta {
 	
 	// Atributos
 	private final Problema problema; // atributo que carrega a instância do problema
@@ -32,7 +32,7 @@ public class ForcaBruta {
 	 *
 	 * @param problema
 	 */
-	public ForcaBruta(Problema problema) {
+	public Problema1ForcaBruta(Problema problema) {
 		this.problema = problema;
 		solucao = new Solucao();
 		caminhos = new ArrayList<>();

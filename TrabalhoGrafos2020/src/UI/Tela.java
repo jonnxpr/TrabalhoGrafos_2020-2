@@ -42,11 +42,13 @@ import Algoritmos.ForcaBruta;
 import Algoritmos.Guloso;
 import Algoritmos.Heuristica;
 import DAO.Arquivo;
+import Modelagem.Aresta;
 import Modelagem.Grafo;
 import Modelagem.Problema;
 import Modelagem.Solucao;
 import Modelagem.Vertice;
 import javafx.util.Pair;
+import javax.swing.JTextField;
 
 /*
 	Faixa de valores válidos
@@ -75,6 +77,8 @@ public class Tela extends JFrame {
 	private JCheckBox checkDirecionado;
 	private boolean direcionado;
 	private final int[] verticePredecessorLargura;
+	private JTextField textFieldVerticeInicial;
+	private JTextField textFieldVerticeFinal;
 
 	/**
 	 * Launch the application.
@@ -184,6 +188,9 @@ public class Tela extends JFrame {
 		graph.removeCells();
 
 		Grafo grafo = grafosDisponiveis.get(nomeGrafo);
+		System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
+		grafo.imprimeMatrizAdj();
+		
 		graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
 
@@ -202,12 +209,12 @@ public class Tela extends JFrame {
 				verticesA.add(v1);
 			}
 
-			int matrizAdj[][] = grafo.getMatriz();
+			Aresta matrizAdj[][] = grafo.getMatriz();
 
 			for (int i = 0; i < grafo.numVertices(); i++) {
 				for (int j = 0; j < grafo.numVertices(); j++) {
-					if (matrizAdj[i][j] != 0) {
-						graph.insertEdge(parent, null, String.valueOf(matrizAdj[i][j]), verticesA.get(i),
+					if (matrizAdj[i][j] != null) {
+						graph.insertEdge(parent, null, String.valueOf(matrizAdj[i][j].getPreco()), verticesA.get(i),
 								verticesA.get(j));
 					}
 				}
@@ -226,6 +233,7 @@ public class Tela extends JFrame {
 			Collection<Object> cells = graphModel.getCells().values();
 			mxUtils.setCellStyles(graphComponent.getGraph().getModel(), cells.toArray(), mxConstants.STYLE_ENDARROW,
 					mxConstants.NONE);
+		
 		} else {
 			mxGraphModel graphModel = (mxGraphModel) graphComponent.getGraph().getModel();
 			Collection<Object> cells = graphModel.getCells().values();
@@ -410,6 +418,24 @@ public class Tela extends JFrame {
 		});
 		checkDirecionado.setBounds(540, 113, 119, 23);
 		painelControle.add(checkDirecionado);
+		
+		textFieldVerticeInicial = new JTextField();
+		textFieldVerticeInicial.setBounds(286, 142, 86, 20);
+		painelControle.add(textFieldVerticeInicial);
+		textFieldVerticeInicial.setColumns(10);
+		
+		textFieldVerticeFinal = new JTextField();
+		textFieldVerticeFinal.setBounds(382, 142, 86, 20);
+		painelControle.add(textFieldVerticeFinal);
+		textFieldVerticeFinal.setColumns(10);
+		
+		JLabel labelVerticeInicial = new JLabel("Vértice inicial");
+		labelVerticeInicial.setBounds(286, 117, 86, 14);
+		painelControle.add(labelVerticeInicial);
+		
+		JLabel labelVerticeFinal = new JLabel("Vértice final");
+		labelVerticeFinal.setBounds(382, 117, 86, 14);
+		painelControle.add(labelVerticeFinal);
 
 		JPanel painelAeroportos = new JPanel();
 		painelAeroportos
@@ -460,7 +486,8 @@ public class Tela extends JFrame {
 				} else {
 					String nomeArq = JOptionPane
 							.showInputDialog("Digite o nome do arquivo com sua respectiva extensão:");
-					grafo = Arquivo.getGrafoOrientado(nomeArq, aeroportos);
+					grafo = ((direcionado) ? Arquivo.getGrafoOrientado(nomeArq, aeroportos) : Arquivo.getGrafoNaoOrientado(nomeArq, aeroportos));
+					grafo.imprimeMatrizAdj();
 					if (grafo == null) {
 						JOptionPane.showMessageDialog(rootPane,
 								"Você não inseriu um arquivo válido ou houve algum erro.");
@@ -528,24 +555,6 @@ public class Tela extends JFrame {
 				if (comboBoxGrafosDisponiveis.getSelectedItem() != null) {
 					String nomeGrafo = String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem());
 					criaGrafo(nomeGrafo);
-					Grafo grafo = grafosDisponiveis.get(nomeGrafo);
-					for (int i = 0; i < grafo.numVertices(); i++) {
-						for (int j = 0; j < grafo.numVertices(); j++) {
-							if (direcionado) {
-								if (grafo.getMatriz()[i][j] == grafo.getMatriz()[j][i]) {
-									grafo.getMatriz()[j][i] = 0;
-								}
-							} else {
-								if (grafo.getMatriz()[i][j] != grafo.getMatriz()[j][i]) {
-									if (grafo.getMatriz()[i][j] == 0) {
-										grafo.getMatriz()[i][j] = grafo.getMatriz()[j][i];
-									} else {
-										grafo.getMatriz()[j][i] = grafo.getMatriz()[i][j];
-									}
-								}
-							}
-						}
-					}
 				} else {
 					JOptionPane.showMessageDialog(rootPane, "Você precisa selecionar um grafo para carregar.");
 				}
@@ -594,7 +603,7 @@ public class Tela extends JFrame {
 		for (int i = 0; i < grafo.numVertices(); i++) {
 			for (int j = i + 1; j < grafo.numVertices(); j++) {
 				if (i % (int) getRandomDoubleBetweenRange(1, 5) == 0) {
-					grafo.insereArestaNaoOrientada(i, j, (int) getRandomDoubleBetweenRange(min, max));
+					grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0 , 0), 10000, getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
 				}
 			}
 		}
@@ -610,7 +619,7 @@ public class Tela extends JFrame {
 	private void gerarMatrizCompleta(Grafo grafo, double min, double max) {
 		for (int i = 0; i < grafo.numVertices(); i++) {
 			for (int j = i + 1; j < grafo.numVertices(); j++) {
-				grafo.insereArestaNaoOrientada(i, j, (int) getRandomDoubleBetweenRange(min, max));
+				grafo.insereArestaNaoOrientada(new Vertice(i, 0, 0), new Vertice(j, 0 , 0), 10000, getRandomDoubleBetweenRange(min, max), (int) getRandomDoubleBetweenRange(min, max));
 			}
 		}
 	}
@@ -652,7 +661,7 @@ public class Tela extends JFrame {
 
 	@SuppressWarnings("unused")
 	private void execProblema1() {
-
+		
 	}
 	@SuppressWarnings("unused")
 	private void execProblema2() {

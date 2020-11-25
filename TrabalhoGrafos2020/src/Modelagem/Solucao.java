@@ -11,7 +11,9 @@ import java.util.ArrayList;
 public class Solucao {
 
 	// Atributos
-	private int distanciaTotal; // distância obtida do caminho solução
+	private double distanciaTotal; // distância obtida do caminho solução
+	private int altitudeTotal;
+	private int precoTotal;
 	private ArrayList<Integer> caminho; // caminho solução
 
 	/**
@@ -19,6 +21,8 @@ public class Solucao {
 	 */
 	public Solucao() {
 		this.distanciaTotal = 0;
+		this.altitudeTotal = 0;
+		this.precoTotal = 0;
 		caminho = new ArrayList<>();
 	}
 
@@ -27,7 +31,7 @@ public class Solucao {
 	 *
 	 * @param distancia
 	 */
-	public void incrementarDistanciaTotal(int distancia) {
+	public void incrementarDistanciaTotal(double distancia) {
 		distanciaTotal = distanciaTotal + distancia;
 	}
 
@@ -45,7 +49,7 @@ public class Solucao {
 	 *
 	 * @return inteiro que representa a distância total do caminho solução
 	 */
-	public int getDistanciaTotal() {
+	public double getDistanciaTotal() {
 		return distanciaTotal;
 	}
 
@@ -97,12 +101,23 @@ public class Solucao {
 		this.caminho = caminho;
 	}
 
-	/**
-	 * Seta a distância total com a distância passa via parâmetro
-	 *
-	 * @param distancia
-	 */
-	public void setDistanciaTotal(int distancia) {
-		distanciaTotal = distancia;
+	public int getAltitudeTotal() {
+		return altitudeTotal;
+	}
+
+	public void setAltitudeTotal(int altitudeTotal) {
+		this.altitudeTotal = altitudeTotal;
+	}
+
+	public int getPrecoTotal() {
+		return precoTotal;
+	}
+
+	public void setPrecoTotal(int precoTotal) {
+		this.precoTotal = precoTotal;
+	}
+
+	public void setDistanciaTotal(double distanciaTotal) {
+		this.distanciaTotal = distanciaTotal;
 	}
 }

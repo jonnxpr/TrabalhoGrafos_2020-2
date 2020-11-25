@@ -13,7 +13,7 @@ public class Grafo {
 	// Atributos
 	private String nomeGrafo;
 	private final int numeroVertices; // aka numero de aeroportos
-	private int[][] matrizAdjacencia;
+	private Aresta[][] matrizAdjacencia;
 
 	/**
 	 * Método construtor, responsável por inicializar o número de vértices e a
@@ -23,7 +23,7 @@ public class Grafo {
 	 */
 	public Grafo(int vertices) {
 		numeroVertices = vertices;
-		matrizAdjacencia = new int[numeroVertices][numeroVertices];
+		matrizAdjacencia = new Aresta[numeroVertices][numeroVertices];
 		inicializaMatrizAdj();
 	}
 
@@ -34,7 +34,7 @@ public class Grafo {
 	private void inicializaMatrizAdj() {
 		for (int i = 0; i < numeroVertices; i++) {
 			for (int j = 0; j < numeroVertices; j++) {
-				matrizAdjacencia[i][j] = 0;
+				matrizAdjacencia[i][j] = null;
 			}
 		}
 	}
@@ -47,10 +47,10 @@ public class Grafo {
 	 * @param vertice2 vértice coluna
 	 * @param peso     peso da aresta
 	 */
-	public void insereAresta(int vertice1, int vertice2, int peso) {
+	public void insereAresta(Vertice vertice1, Vertice vertice2, int altitude, double distancia, int preco) {
 		// adiciona na posição [v1][v2] o valor do peso correspondente a aresta
 		// adicionada
-		matrizAdjacencia[vertice1][vertice2] = peso;
+		matrizAdjacencia[vertice1.getValorRepresentativo()][vertice2.getValorRepresentativo()] = new Aresta(vertice1, vertice2, altitude, distancia, preco);
 	}
 
 	/**
@@ -61,9 +61,9 @@ public class Grafo {
 	 * @param vertice2
 	 * @param peso
 	 */
-	public void insereArestaNaoOrientada(int vertice1, int vertice2, int peso) {
-		insereAresta(vertice1, vertice2, peso);
-		insereAresta(vertice2, vertice1, peso);
+	public void insereArestaNaoOrientada(Vertice vertice1, Vertice vertice2, int altitude, double distancia, int preco) {
+		insereAresta(vertice1, vertice2, altitude, distancia, preco);
+		insereAresta(vertice2, vertice1, altitude, distancia, preco);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class Grafo {
 	 * @return true se existir, false caso não exista
 	 */
 	public boolean existeAresta(int vertice1, int vertice2) {
-		return matrizAdjacencia[vertice1][vertice2] > 0;
+		return matrizAdjacencia[vertice1][vertice2] != null;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Grafo {
 		ArrayList<Integer> listaAdj = new ArrayList<>();
 
 		for (int i = 0; i < numeroVertices; i++) {
-			if (matrizAdjacencia[vertice1][i] != 0) {
+			if (matrizAdjacencia[vertice1][i] != null) {
 				listaAdj.add(i);
 			}
 		}
@@ -104,8 +104,16 @@ public class Grafo {
 	 * @param vertice2
 	 * @return o peso de determinada aresta contida na matriz
 	 */
-	public int getPeso(int vertice1, int vertice2) {
-		return this.matrizAdjacencia[vertice1][vertice2];
+	public int getAltitude(int vertice1, int vertice2) {
+		return this.matrizAdjacencia[vertice1][vertice2].getAltitude();
+	}
+	
+	public double getDistancia(int vertice1, int vertice2) {
+		return (this.matrizAdjacencia[vertice1][vertice2] != null) ? this.matrizAdjacencia[vertice1][vertice2].getDistancia() : 0;
+	}
+	
+	public int getPreco(int vertice1, int vertice2) {
+		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
 	}
 
 	/**
@@ -116,7 +124,11 @@ public class Grafo {
 		System.out.println("Matriz de adjacência:");
 		for (int i = 0; i < numeroVertices; i++) {
 			for (int j = 0; j < numeroVertices; j++) {
-				System.out.print(matrizAdjacencia[i][j] + " ");
+				if (matrizAdjacencia[i][j] != null) {
+					System.out.print(matrizAdjacencia[i][j].getV1().getLabelVertice() + matrizAdjacencia[i][j].getV2().getLabelVertice() + "                 ");
+				} else {
+					System.out.print("-1                 ");
+				}
 			}
 			System.out.println();
 		}
@@ -137,7 +149,7 @@ public class Grafo {
 	 *
 	 * @param matriz
 	 */
-	public void setMatriz(int[][] matriz) {
+	public void setMatriz(Aresta[][] matriz) {
 		matrizAdjacencia = matriz;
 	}
 
@@ -149,7 +161,7 @@ public class Grafo {
 		this.nomeGrafo = nomeGrafo;
 	}
 
-	public int[][] getMatriz() {
+	public Aresta[][] getMatriz() {
 		return this.matrizAdjacencia;
 	}
 }
