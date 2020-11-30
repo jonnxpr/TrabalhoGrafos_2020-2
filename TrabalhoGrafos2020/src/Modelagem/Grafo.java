@@ -1,3 +1,11 @@
+/**
+ * Trabalho Pr�tico - Classe Grafo
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
 package Modelagem;
 
 //Importações
@@ -65,6 +73,7 @@ public class Grafo {
 	}
 
 	public int getPreco(int vertice1, int vertice2) {
+		System.out.println("V1 = " + vertice1 + "\nV2 =" + vertice2);
 		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
 	}
 

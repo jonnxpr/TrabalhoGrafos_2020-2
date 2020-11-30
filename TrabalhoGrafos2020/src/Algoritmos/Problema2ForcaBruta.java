@@ -1,3 +1,12 @@
+/**
+ * Trabalho Pr�tico - Classe Problema2ForcaBruta
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Algoritmos;
 
 import java.util.ArrayList;
@@ -100,7 +109,7 @@ public class Problema2ForcaBruta {
 	 * Calcula o menor caminho comparando a distância total obtida para cada
 	 * permutação gerada
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 */
 	private void calculaMenorCaminho(int aeroportoInicial, int aeroportoFinal) {
 		// gera todas as permutações
@@ -111,16 +120,16 @@ public class Problema2ForcaBruta {
 			caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
 			// System.out.println("\n\nperminiciais\n\n");
 			// imprime(caminhos);
-			// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
+			// completa os caminhos de forma a ser possível sair da aeroporto inicial e voltar
 			// para a mesma
 			ArrayList<int[]> caminhosDesejados = removerPermIndesejada(aeroportoInicial, aeroportoFinal, caminhos);
-			System.out.println("\n\nCaminhos Des: \n\n");
-			System.out.println("\n\nCaminhos Comp: \n\n");
-			imprime(caminhosDesejados);
+			//System.out.println("\n\nCaminhos Des: \n\n");
+			//System.out.println("\n\nCaminhos Comp: \n\n");
+			//imprime(caminhosDesejados);
 			caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
-			imprime(caminhosDesejados);
-			System.out.println("tamDesej =" + caminhosDesejados.size());
-			System.out.println(caminhosDesejados.isEmpty());
+			//imprime(caminhosDesejados);
+			//System.out.println("tamDesej =" + caminhosDesejados.size());
+			//System.out.println(caminhosDesejados.isEmpty());
 
 			int menorCaminho[] = caminhosDesejados.get(0);
 			ArrayList<Integer> menorCaminhoList = new ArrayList<>();
@@ -161,13 +170,13 @@ public class Problema2ForcaBruta {
 	}
 
 	/**
-	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
+	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto de
 	 * permutações
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 * @param array
 	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
-	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
+	 *         completo, ou seja, inicia na aeroporto inicial e termina na mesma.
 	 */
 	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
 		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
@@ -194,7 +203,7 @@ public class Problema2ForcaBruta {
 	 * Gera permutação inicial a ser utilizada no método que irá gerar todas as
 	 * permutações
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 * @return vetor de inteiros contendo a permutação gerada
 	 */
 	private int[] geraPermutacaoInicial(int aeroportoInicial) {
@@ -238,7 +247,7 @@ public class Problema2ForcaBruta {
 	/**
 	 * Retorna a solução
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 * @return solução obtida após o calculo do melhor caminho
 	 */
 	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
@@ -335,7 +344,7 @@ public class Problema2ForcaBruta {
 					array.remove(array.get(i));
 					// System.out.println("\n i = " + i + " Depois");
 					i--;
-					imprime(array);
+					//imprime(array);
 					break;
 				}
 			}

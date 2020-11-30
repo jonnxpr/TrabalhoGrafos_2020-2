@@ -1,3 +1,11 @@
+/**
+ * Trabalho Prático - Classe Problema
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
 package Modelagem;
 
 /**
@@ -66,6 +74,9 @@ public class Problema {
 	}
 
 	public int getPreco(int v1, int v2) {
+		if (!grafo.existeAresta(v1, v2)) {
+			return 0;
+		}
 		return this.grafo.getPreco(v1, v2);
 	}
 }

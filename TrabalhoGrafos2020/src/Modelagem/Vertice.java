@@ -1,6 +1,17 @@
+/**
+ * Trabalho Prático - Classe Vertice
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Modelagem;
 
 public class Vertice {
+	
+	//Atributos
 	private String labelVertice;
 	private int valorRepresentativo;
 	private int grau;

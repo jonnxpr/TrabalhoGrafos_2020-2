@@ -1,3 +1,12 @@
+/**
+ * Trabalho Prático - Classe Aresta
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Modelagem;
 
 public class Aresta {

@@ -1,3 +1,11 @@
+/**
+ * Trabalho Pr�tico - Classe Arquivo
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
 package DAO;
 
 //Importações

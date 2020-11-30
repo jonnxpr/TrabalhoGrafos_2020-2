@@ -1,5 +1,5 @@
 /**
- * Trabalho Prático
+ * Trabalho Prático - Classe Tela
  *
  * @author Jonathan Douglas Diego Tavares
  * @matricula 540504

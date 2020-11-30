@@ -1,3 +1,12 @@
+/**
+ * Trabalho Pr�tico - Classe Problema3ForcaBruta
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Algoritmos;
 
 import java.util.ArrayList;
@@ -48,7 +57,7 @@ public class Problema3ForcaBruta {
 		// gera todas as permutações
 		caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
 		// imprime(caminhos);
-		// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
+		// completa os caminhos de forma a ser possível sair da aeroporto inicial e voltar
 		// para a mesma
 		// ArrayList<int[]> caminhosDesejados = removerPermIndesejada(caminhos);
 		ArrayList<int[]> caminhosCompletos = completarCaminhos(aeroportoInicial, caminhos);
@@ -80,13 +89,13 @@ public class Problema3ForcaBruta {
 	}
 
 	/**
-	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
+	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto de
 	 * permutações
 	 *
 	 * @param aeroportoInicial
 	 * @param array
 	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
-	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
+	 *         completo, ou seja, inicia na aeroporto inicial e termina na mesma.
 	 */
 	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, ArrayList<int[]> array) {
 		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
@@ -150,12 +159,12 @@ public class Problema3ForcaBruta {
 	/**
 	 * Retorna a solução
 	 *
-	 * @param aeorportoInicial
+	 * @param aeroportoInicial
 	 * @return solução obtida após o calculo do melhor caminho
 	 */
-	public Solucao getSolucao(int aeorportoInicial) {
+	public Solucao getSolucao(int aeroportoInicial) {
 
-		calculaMenorCaminho(aeorportoInicial);
+		calculaMenorCaminho(aeroportoInicial);
 		return solucao;
 	}
 
@@ -165,7 +174,6 @@ public class Problema3ForcaBruta {
 	 *
 	 * @param arrayList
 	 */
-	@SuppressWarnings("unused")
 	private void imprime(ArrayList<int[]> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
 			for (int j = 0; j < arrayList.get(i).length; j++) {
@@ -176,7 +184,6 @@ public class Problema3ForcaBruta {
 	}
 
 	private ArrayList<int[]> removerPermIndesejada(ArrayList<int[]> array) {
-
 		for (int i = 0; i < array.size(); i++) {
 			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
 				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +

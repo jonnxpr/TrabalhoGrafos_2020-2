@@ -1,3 +1,12 @@
+/**
+ * Trabalho Pr�tico - Classe Problema3HeuristicaSecundaria
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Algoritmos;
 
 import java.util.ArrayList;
@@ -13,9 +22,9 @@ import javafx.util.Pair;
  * Classe Heuristica Implementa a heurística da "inserção mais barata"
  *
  * Funcionamento: Consiste em construir uma rota passo a passo, partindo de rota
- * inicial envolvendo 3 cidades (obtidas por um método qualquer) e adicionar a
+ * inicial envolvendo 3 aeroportos (obtidas por um método qualquer) e adicionar a
  * cada passo, a cidade k (ainda não visitada) entre a ligação (i, j) de
- * cidades já visitadas, cujo custo de inserção seja o mais barato
+ * aeroportos já visitadas, cujo custo de inserção seja o mais barato
  *
  * Complexidade: O(n^3)
  *

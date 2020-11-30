@@ -1,13 +1,17 @@
+/**
+ * Trabalho Pr�tico - Classe Solucao
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Modelagem;
 
 //Importações
 import java.util.ArrayList;
 
-/**
- * Classe Solucao
- *
- * @author Jonathan Douglas Diego Tavares
- */
 public class Solucao {
 
 	// Atributos
@@ -27,12 +31,12 @@ public class Solucao {
 	}
 
 	/**
-	 * Adiciona um inteiro referente a uma cidade no caminho solução
+	 * Adiciona um inteiro referente a um aeroporto no caminho solu��o
 	 *
-	 * @param cidade
+	 * @param aeroporto
 	 */
-	public void addCidadeNoCaminho(int cidade) {
-		caminho.add(cidade);
+	public void addAeroportoNoCaminho(int aeroporto) {
+		caminho.add(aeroporto);
 	}
 
 	public int getAltitudeTotal() {
@@ -63,18 +67,18 @@ public class Solucao {
 	}
 
 	/**
-	 * Retorna a quantidade de cidades no caminho solução
+	 * Retorna a quantidade de aeroportos no caminho solução
 	 *
 	 * @return quantidade de cidades no caminho solução
 	 */
-	public int getQuantCidadesNoCaminho() {
+	public int getQuantAeroportosNoCaminho() {
 		return caminho.size();
 	}
 
 	/**
-	 * Retorna a última cidade do caminho solução
+	 * Retorna a última aeroporto do caminho solução
 	 *
-	 * @return inteiro que representa a última cidade do caminho solução
+	 * @return inteiro que representa a última aeroporto do caminho solução
 	 */
 	public int getUltimaCidade() {
 		return caminho.get(caminho.size() - 1);
@@ -110,7 +114,7 @@ public class Solucao {
 	}
 
 	/**
-	 * Seta o caminho solução com o caminho passado via parâmetro
+	 * Seta o caminho solução com o aeroporto passado via parâmetro
 	 *
 	 * @param caminho
 	 */

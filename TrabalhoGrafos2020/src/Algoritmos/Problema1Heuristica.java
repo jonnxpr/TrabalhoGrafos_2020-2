@@ -1,3 +1,12 @@
+/**
+ * Trabalho Pr�tico - Classe Problema1Heuristica
+ *
+ * @author Jonathan Douglas Diego Tavares
+ * @matricula 540504
+ * @disciplina Algortimos em Grafos
+ * @professor Alexei Machado
+ */
+
 package Algoritmos;
 
 import java.util.ArrayList;
@@ -9,8 +18,8 @@ import Modelagem.Solucao;
 /**
  * Classe Guloso Implementa a heurística gulosa do "vizinho mais próximo"
  *
- * Funcionamento: Consiste em pegar e adicionar a solução a cidade cuja
- * distância é a menor a partir da cidade atual
+ * Funcionamento: Consiste em pegar e adicionar a solução a aeroporto cuja
+ * distância é a menor a partir da aeroporto atual
  *
  * Complexidade: O(n^2)
  *
@@ -33,35 +42,35 @@ public class Problema1Heuristica {
 	}
 
 	/**
-	 * Calcula o melhor percurso partindo de uma determinada cidade inicial
+	 * Calcula o melhor percurso partindo de uma determinada aeroporto inicial
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 */
 	private void calculaMenorCaminho(int aeroportoInicial, int aeroportoFinal) {
 		ArrayList<Integer> caminhoTemp = new ArrayList<>(); // carregará o melhor caminho obtido
-		caminhoTemp.add(aeroportoInicial); // adiciona a cidade inicial ao início do percurso
+		caminhoTemp.add(aeroportoInicial); // adiciona a aeroporto inicial ao início do percurso
 
-		// utiliza o conceito de cidade atual (vértice atual) e
-		// cidade mais próxima(vértice cuja aresta tem menor peso a partir do vértice
+		// utiliza o conceito de aeroporto atual (vértice atual) e
+		// aeroporto mais próxima(vértice cuja aresta tem menor peso a partir do vértice
 		// atual)
 		int aeroportoAtual = aeroportoInicial;
 		int aeroportoMaisProximo;
 		double distanciaTotal = 0; // distancia total obtida no percurso
 		int verticeDeMenorAresta; // vértice cujo peso é o menor a patir do vértice atual
-		int nAeroportos = problema.getGrafo().numVertices(); // obtém a quantidade de cidades do problema
+		int nAeroportos = problema.getGrafo().numVertices(); // obtém a quantidade de aeroportos do problema
 
-		// enquanto o caminho não houver a mesma quantidade de cidades do problema
+		// enquanto o caminho não houver a mesma quantidade de aeroportos do problema
 		// inicial
 		while (aeroportoAtual != aeroportoFinal) {
-			// obtém a lista de adjacência do vértice atual (cidade atual)
+			// obtém a lista de adjacência do vértice atual (aeroporto atual)
 			ArrayList<Integer> listaAdj = problema.getGrafo().listaDeAdjacencia(aeroportoAtual);
 
-			// retira todas as cidades já percorridas da lista de adjacência
+			// retira todas as aeroportos já percorridas da lista de adjacência
 			for (Integer i : caminhoTemp) {
 				listaAdj.remove(i);
 			}
 
-			// obtém a cidade mais próxima da cidade atual
+			// obtém a aeroporto mais próxima da aeroporto atual
 			verticeDeMenorAresta = getVerticeComArestaDeMenorPeso(aeroportoAtual, listaAdj);
 			aeroportoMaisProximo = verticeDeMenorAresta;
 
@@ -70,14 +79,14 @@ public class Problema1Heuristica {
 			// incrementa a distância total
 			distanciaTotal = distanciaTotal + problema.getDistancia(aeroportoAtual, aeroportoMaisProximo);
 
-			// adiciona a cidade mais próxima ao percurso
+			// adiciona a aeroporto mais próxima ao percurso
 			caminhoTemp.add(aeroportoMaisProximo);
 
-			// seta a cidade atual como a cidade mais próxima obtida na solução
+			// seta a aeroporto atual como a aeroporto mais próxima obtida na solução
 			aeroportoAtual = aeroportoMaisProximo;
 		}
 
-		// adiciona a volta para a cidade inicial
+		// adiciona a volta para a aeroporto inicial
 		// caminhoTemp.add(aeroportoFinal);
 
 		// seta o melhor percurso obtido
@@ -90,7 +99,7 @@ public class Problema1Heuristica {
 	/**
 	 * Retorna a solução
 	 *
-	 * @param cidadeInicial
+	 * @param aeroportoInicial
 	 * @return solução obtida após o calculo do melhor caminho
 	 */
 	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
@@ -99,12 +108,12 @@ public class Problema1Heuristica {
 	}
 
 	/**
-	 * Retorna a cidade mais próxima da cidade atual, ou seja, o vértice cuja
+	 * Retorna a aeroporto mais próxima da aeroporto atual, ou seja, o vértice cuja
 	 * aresta tem menor peso a partir do vértice atual
 	 *
-	 * @param cidadeAtual
+	 * @param aeroportoAtual
 	 * @param lista
-	 * @return vértice representando a cidade mais próxima da cidade atual
+	 * @return vértice representando a aeroporto mais próxima da aeroporto atual
 	 */
 	private int getVerticeComArestaDeMenorPeso(int aeroportoAtual, ArrayList<Integer> lista) {
 		int verticeEscolhido = lista.get(0);
