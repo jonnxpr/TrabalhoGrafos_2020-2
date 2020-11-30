@@ -28,6 +28,66 @@ public class Grafo {
 	}
 
 	/**
+	 * Método existeAresta, responsável por verificar se existe determinada aresta
+	 * na matriz de adjacência
+	 *
+	 * @param vertice1
+	 * @param vertice2
+	 * @return true se existir, false caso não exista
+	 */
+	public boolean existeAresta(int vertice1, int vertice2) {
+		return matrizAdjacencia[vertice1][vertice2] != null;
+	}
+
+	/**
+	 * Método getPeso, responsável por retornar o peso de uma aresta.
+	 *
+	 * @param vertice1
+	 * @param vertice2
+	 * @return o peso de determinada aresta contida na matriz
+	 */
+	public int getAltitude(int vertice1, int vertice2) {
+		return this.matrizAdjacencia[vertice1][vertice2].getAltitude();
+	}
+
+	public double getDistancia(int vertice1, int vertice2) {
+		return (this.matrizAdjacencia[vertice1][vertice2] != null)
+				? this.matrizAdjacencia[vertice1][vertice2].getDistancia()
+				: -1;
+	}
+
+	public Aresta[][] getMatriz() {
+		return this.matrizAdjacencia;
+	}
+
+	public String getNomeGrafo() {
+		return nomeGrafo;
+	}
+
+	public int getPreco(int vertice1, int vertice2) {
+		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
+	}
+
+	/**
+	 * Método imprimeMatrizAdj, responsável por realizar a impressão da matriz de
+	 * adjacência
+	 */
+	public void imprimeMatrizAdj() {
+		System.out.println("Matriz de adjacência:");
+		for (int i = 0; i < numeroVertices; i++) {
+			for (int j = 0; j < numeroVertices; j++) {
+				if (matrizAdjacencia[i][j] != null) {
+					System.out.print(matrizAdjacencia[i][j].getV1().getLabelVertice()
+							+ matrizAdjacencia[i][j].getV2().getLabelVertice() + "                 ");
+				} else {
+					System.out.print("-1                 ");
+				}
+			}
+			System.out.println();
+		}
+	}
+
+	/**
 	 * Método auxiliar para colocar o valor 0 nas posições da matriz de
 	 * adjacência.
 	 */
@@ -69,18 +129,6 @@ public class Grafo {
 	}
 
 	/**
-	 * Método existeAresta, responsável por verificar se existe determinada aresta
-	 * na matriz de adjacência
-	 *
-	 * @param vertice1
-	 * @param vertice2
-	 * @return true se existir, false caso não exista
-	 */
-	public boolean existeAresta(int vertice1, int vertice2) {
-		return matrizAdjacencia[vertice1][vertice2] != null;
-	}
-
-	/**
 	 * Método listaDeAdjacencia, responsável por retornar a lista de adjacência
 	 * obtida a partir da matriz
 	 *
@@ -97,46 +145,6 @@ public class Grafo {
 		}
 
 		return listaAdj;
-	}
-
-	/**
-	 * Método getPeso, responsável por retornar o peso de uma aresta.
-	 *
-	 * @param vertice1
-	 * @param vertice2
-	 * @return o peso de determinada aresta contida na matriz
-	 */
-	public int getAltitude(int vertice1, int vertice2) {
-		return this.matrizAdjacencia[vertice1][vertice2].getAltitude();
-	}
-
-	public double getDistancia(int vertice1, int vertice2) {
-		return (this.matrizAdjacencia[vertice1][vertice2] != null)
-				? this.matrizAdjacencia[vertice1][vertice2].getDistancia()
-				: -1;
-	}
-
-	public int getPreco(int vertice1, int vertice2) {
-		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
-	}
-
-	/**
-	 * Método imprimeMatrizAdj, responsável por realizar a impressão da matriz de
-	 * adjacência
-	 */
-	public void imprimeMatrizAdj() {
-		System.out.println("Matriz de adjacência:");
-		for (int i = 0; i < numeroVertices; i++) {
-			for (int j = 0; j < numeroVertices; j++) {
-				if (matrizAdjacencia[i][j] != null) {
-					System.out.print(matrizAdjacencia[i][j].getV1().getLabelVertice()
-							+ matrizAdjacencia[i][j].getV2().getLabelVertice() + "                 ");
-				} else {
-					System.out.print("-1                 ");
-				}
-			}
-			System.out.println();
-		}
 	}
 
 	/**
@@ -158,15 +166,7 @@ public class Grafo {
 		matrizAdjacencia = matriz;
 	}
 
-	public String getNomeGrafo() {
-		return nomeGrafo;
-	}
-
 	public void setNomeGrafo(String nomeGrafo) {
 		this.nomeGrafo = nomeGrafo;
-	}
-
-	public Aresta[][] getMatriz() {
-		return this.matrizAdjacencia;
 	}
 }

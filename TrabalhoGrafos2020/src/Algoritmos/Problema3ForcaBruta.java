@@ -39,98 +39,6 @@ public class Problema3ForcaBruta {
 	}
 
 	/**
-	 * Gera permutação inicial a ser utilizada no método que irá gerar todas as
-	 * permutações
-	 *
-	 * @param aeroportoInicial
-	 * @return vetor de inteiros contendo a permutação gerada
-	 */
-	private int[] geraPermutacaoInicial(int aeroportoInicial) {
-		int permutacao[] = new int[problema.getGrafo().numVertices() - 1];
-		int i = 0;
-		int pos = 0;
-
-		while (i < permutacao.length + 1) {
-			if (i != aeroportoInicial) {
-				permutacao[pos] = i;
-				pos++;
-				i++;
-			} else {
-				i++;
-			}
-		}
-
-		return permutacao;
-	}
-
-	private ArrayList<int[]> removerPermIndesejada(ArrayList<int[]> array) {
-
-		for (int i = 0; i < array.size(); i++) {
-			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
-				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
-				// array.get(i)[j]);
-				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
-				// array.get(i)[j + 1]));
-				// System.out.println("\n i = " + i + " Antes");
-				// imprime(array);
-				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
-					array.remove(array.get(i));
-					// System.out.println("\n i = " + i + " Depois");
-					i--;
-					imprime(array);
-					break;
-				}
-			}
-		}
-		// System.out.println("\nT2\n");
-		// imprime(array);
-		return array;
-	}
-
-	/**
-	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
-	 * permutações
-	 *
-	 * @param aeroportoInicial
-	 * @param array
-	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
-	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
-	 */
-	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, ArrayList<int[]> array) {
-		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
-		for (int i = 0; i < array.size(); i++) {
-			int aux[] = new int[problema.getGrafo().numVertices() + 1];
-			aux[0] = aeroportoInicial;
-			aux[aux.length - 1] = aeroportoInicial;
-
-			for (int j = 1; j < array.get(i).length + 1; j++) {
-				aux[j] = array.get(i)[j - 1];
-			}
-
-			caminhosCompletos.add(aux);
-		}
-
-		return caminhosCompletos;
-	}
-
-	/**
-	 * Calcula a distância total de um determinado caminho fornecido como um vetor
-	 * de inteiros
-	 *
-	 * @param caminho
-	 * @return inteiro representando a distância total obtida no caminho
-	 */
-	private int getPrecoCaminho(int[] caminho) {
-		int preco = 0;
-
-		for (int i = 0; i < caminho.length - 1; i++) {
-			preco = preco + problema.getPreco(caminho[i], caminho[i + 1]);
-		}
-
-		return preco;
-	}
-
-	/**
 	 * Calcula o menor caminho comparando a distância total obtida para cada
 	 * permutação gerada
 	 *
@@ -172,6 +80,86 @@ public class Problema3ForcaBruta {
 	}
 
 	/**
+	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
+	 * permutações
+	 *
+	 * @param aeroportoInicial
+	 * @param array
+	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
+	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
+	 */
+	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, ArrayList<int[]> array) {
+		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
+		for (int i = 0; i < array.size(); i++) {
+			int aux[] = new int[problema.getGrafo().numVertices() + 1];
+			aux[0] = aeroportoInicial;
+			aux[aux.length - 1] = aeroportoInicial;
+
+			for (int j = 1; j < array.get(i).length + 1; j++) {
+				aux[j] = array.get(i)[j - 1];
+			}
+
+			caminhosCompletos.add(aux);
+		}
+
+		return caminhosCompletos;
+	}
+
+	/**
+	 * Gera permutação inicial a ser utilizada no método que irá gerar todas as
+	 * permutações
+	 *
+	 * @param aeroportoInicial
+	 * @return vetor de inteiros contendo a permutação gerada
+	 */
+	private int[] geraPermutacaoInicial(int aeroportoInicial) {
+		int permutacao[] = new int[problema.getGrafo().numVertices() - 1];
+		int i = 0;
+		int pos = 0;
+
+		while (i < permutacao.length + 1) {
+			if (i != aeroportoInicial) {
+				permutacao[pos] = i;
+				pos++;
+				i++;
+			} else {
+				i++;
+			}
+		}
+
+		return permutacao;
+	}
+
+	/**
+	 * Calcula a distância total de um determinado caminho fornecido como um vetor
+	 * de inteiros
+	 *
+	 * @param caminho
+	 * @return inteiro representando a distância total obtida no caminho
+	 */
+	private int getPrecoCaminho(int[] caminho) {
+		int preco = 0;
+
+		for (int i = 0; i < caminho.length - 1; i++) {
+			preco = preco + problema.getPreco(caminho[i], caminho[i + 1]);
+		}
+
+		return preco;
+	}
+
+	/**
+	 * Retorna a solução
+	 *
+	 * @param aeorportoInicial
+	 * @return solução obtida após o calculo do melhor caminho
+	 */
+	public Solucao getSolucao(int aeorportoInicial) {
+
+		calculaMenorCaminho(aeorportoInicial);
+		return solucao;
+	}
+
+	/**
 	 * Imprime os elementos de um ArrayList que armazena um conjunto de vetores de
 	 * inteiros
 	 *
@@ -187,15 +175,27 @@ public class Problema3ForcaBruta {
 		}
 	}
 
-	/**
-	 * Retorna a solução
-	 *
-	 * @param aeorportoInicial
-	 * @return solução obtida após o calculo do melhor caminho
-	 */
-	public Solucao getSolucao(int aeorportoInicial) {
+	private ArrayList<int[]> removerPermIndesejada(ArrayList<int[]> array) {
 
-		calculaMenorCaminho(aeorportoInicial);
-		return solucao;
+		for (int i = 0; i < array.size(); i++) {
+			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
+				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
+				// array.get(i)[j]);
+				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
+				// array.get(i)[j + 1]));
+				// System.out.println("\n i = " + i + " Antes");
+				// imprime(array);
+				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
+					array.remove(array.get(i));
+					// System.out.println("\n i = " + i + " Depois");
+					i--;
+					imprime(array);
+					break;
+				}
+			}
+		}
+		// System.out.println("\nT2\n");
+		// imprime(array);
+		return array;
 	}
 }

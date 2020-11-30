@@ -38,39 +38,6 @@ public class Problema3HeuristicaSecundaria {
 	}
 
 	/**
-	 * Sorteia um valor inteiro representando uma cidade que ainda não esteja no
-	 * caminho
-	 *
-	 * @param caminho
-	 * @return valor inteiro representando a cidade sorteada
-	 */
-	private int sorteiaDiferente(ArrayList<Integer> caminho) {
-		Random random = new Random();
-		int sorteado = random.nextInt(problema.getGrafo().numVertices());
-		while (caminho.contains(sorteado)) {
-			sorteado = random.nextInt(problema.getGrafo().numVertices());
-		}
-		return sorteado;
-	}
-
-	/**
-	 * Calcula a distância total de um determinado caminho fornecido como um vetor
-	 * de inteiros
-	 *
-	 * @param caminho
-	 * @return inteiro representando a distância total obtida no caminho
-	 */
-	private double getDistanciaCaminho(Integer[] caminho) {
-		double distancia = 0;
-
-		for (int i = 0; i < caminho.length - 1; i++) {
-			distancia = distancia + problema.getDistancia(caminho[i], caminho[i + 1]);
-		}
-
-		return distancia;
-	}
-
-	/**
 	 * Atualiza o conjunto de vértices(cidades) não visitados baseado no conjunto
 	 * de visitados
 	 *
@@ -83,63 +50,6 @@ public class Problema3HeuristicaSecundaria {
 				array.add(i);
 			}
 		}
-	}
-
-	/**
-	 * Verifica qual é o custo de inserção mais barato do conjunto de custos
-	 * presentes na tabela
-	 *
-	 * @param tabela
-	 * @return Pair contendo o percurso do menor custo e o respectivo custo.
-	 */
-	private Pair<Integer[], Double> getMelhorOpcao(ArrayList<Pair<Integer[], Double>> tabela) {
-		Pair<Integer[], Double> melhorOpcao = tabela.get(0);
-
-		for (int i = 1; i < tabela.size(); i++) {
-			if (tabela.get(i).getValue() < melhorOpcao.getValue()) {
-				melhorOpcao = tabela.get(i);
-			}
-		}
-
-		// System.out.println("mv = " + melhorOpcao.getValue());
-		return melhorOpcao;
-	}
-
-	/**
-	 * Faz o passo de inserção da cidade k ainda não presente no caminho entre as
-	 * cidades i e j já presentes no caminho
-	 *
-	 * @param melhorOpcao
-	 * @param caminho
-	 */
-	private void insereMelhorOpcaoNoCaminho(Pair<Integer[], Double> melhorOpcao, ArrayList<Integer> caminho) {
-		/*
-		 * System.out.print("->->"); for (Integer i : caminho){ System.out.print (i +
-		 * " "); } System.out.println("-");
-		 */
-
-		// posição de inserção é obtida através da posição da cidade i + 1
-		// no ArrayList que representa o caminho
-		int posicaoDeInsercao = caminho.indexOf(melhorOpcao.getKey()[0]);
-		caminho.add(posicaoDeInsercao + 1, melhorOpcao.getKey()[1]);
-
-		/*
-		 * System.out.print("->->"); for (Integer i : caminho){ System.out.print (i +
-		 * " "); } System.out.println("");
-		 */
-	}
-
-	/**
-	 * Gera um caminho contendo 3 cidades (sendo uma delas a cidade inicial),
-	 * representando o percurso inicial
-	 *
-	 * @param caminho
-	 * @param cidadeInicial
-	 */
-	private void geraCaminhoInicial(ArrayList<Integer> caminho, int cidadeInicial) {
-		caminho.add(cidadeInicial);
-		caminho.add(sorteiaDiferente(caminho));
-		caminho.add(sorteiaDiferente(caminho));
 	}
 
 	/**
@@ -232,6 +142,56 @@ public class Problema3HeuristicaSecundaria {
 	}
 
 	/**
+	 * Gera um caminho contendo 3 cidades (sendo uma delas a cidade inicial),
+	 * representando o percurso inicial
+	 *
+	 * @param caminho
+	 * @param cidadeInicial
+	 */
+	private void geraCaminhoInicial(ArrayList<Integer> caminho, int cidadeInicial) {
+		caminho.add(cidadeInicial);
+		caminho.add(sorteiaDiferente(caminho));
+		caminho.add(sorteiaDiferente(caminho));
+	}
+
+	/**
+	 * Calcula a distância total de um determinado caminho fornecido como um vetor
+	 * de inteiros
+	 *
+	 * @param caminho
+	 * @return inteiro representando a distância total obtida no caminho
+	 */
+	private double getDistanciaCaminho(Integer[] caminho) {
+		double distancia = 0;
+
+		for (int i = 0; i < caminho.length - 1; i++) {
+			distancia = distancia + problema.getDistancia(caminho[i], caminho[i + 1]);
+		}
+
+		return distancia;
+	}
+
+	/**
+	 * Verifica qual é o custo de inserção mais barato do conjunto de custos
+	 * presentes na tabela
+	 *
+	 * @param tabela
+	 * @return Pair contendo o percurso do menor custo e o respectivo custo.
+	 */
+	private Pair<Integer[], Double> getMelhorOpcao(ArrayList<Pair<Integer[], Double>> tabela) {
+		Pair<Integer[], Double> melhorOpcao = tabela.get(0);
+
+		for (int i = 1; i < tabela.size(); i++) {
+			if (tabela.get(i).getValue() < melhorOpcao.getValue()) {
+				melhorOpcao = tabela.get(i);
+			}
+		}
+
+		// System.out.println("mv = " + melhorOpcao.getValue());
+		return melhorOpcao;
+	}
+
+	/**
 	 * Retorna a solução
 	 *
 	 * @param cidadeInicial
@@ -240,5 +200,45 @@ public class Problema3HeuristicaSecundaria {
 	public Solucao getSolucao(int cidadeInicial) {
 		calculaMenorCaminho(cidadeInicial);
 		return solucao;
+	}
+
+	/**
+	 * Faz o passo de inserção da cidade k ainda não presente no caminho entre as
+	 * cidades i e j já presentes no caminho
+	 *
+	 * @param melhorOpcao
+	 * @param caminho
+	 */
+	private void insereMelhorOpcaoNoCaminho(Pair<Integer[], Double> melhorOpcao, ArrayList<Integer> caminho) {
+		/*
+		 * System.out.print("->->"); for (Integer i : caminho){ System.out.print (i +
+		 * " "); } System.out.println("-");
+		 */
+
+		// posição de inserção é obtida através da posição da cidade i + 1
+		// no ArrayList que representa o caminho
+		int posicaoDeInsercao = caminho.indexOf(melhorOpcao.getKey()[0]);
+		caminho.add(posicaoDeInsercao + 1, melhorOpcao.getKey()[1]);
+
+		/*
+		 * System.out.print("->->"); for (Integer i : caminho){ System.out.print (i +
+		 * " "); } System.out.println("");
+		 */
+	}
+
+	/**
+	 * Sorteia um valor inteiro representando uma cidade que ainda não esteja no
+	 * caminho
+	 *
+	 * @param caminho
+	 * @return valor inteiro representando a cidade sorteada
+	 */
+	private int sorteiaDiferente(ArrayList<Integer> caminho) {
+		Random random = new Random();
+		int sorteado = random.nextInt(problema.getGrafo().numVertices());
+		while (caminho.contains(sorteado)) {
+			sorteado = random.nextInt(problema.getGrafo().numVertices());
+		}
+		return sorteado;
 	}
 }

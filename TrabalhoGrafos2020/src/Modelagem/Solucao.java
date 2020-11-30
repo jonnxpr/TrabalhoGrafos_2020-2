@@ -27,15 +27,6 @@ public class Solucao {
 	}
 
 	/**
-	 * Incrementa a distância total com o valor passado pelo parâmetro
-	 *
-	 * @param distancia
-	 */
-	public void incrementarDistanciaTotal(double distancia) {
-		distanciaTotal = distanciaTotal + distancia;
-	}
-
-	/**
 	 * Adiciona um inteiro referente a uma cidade no caminho solução
 	 *
 	 * @param cidade
@@ -44,13 +35,8 @@ public class Solucao {
 		caminho.add(cidade);
 	}
 
-	/**
-	 * Retorna a distância total do caminho solução
-	 *
-	 * @return inteiro que representa a distância total do caminho solução
-	 */
-	public double getDistanciaTotal() {
-		return distanciaTotal;
+	public int getAltitudeTotal() {
+		return altitudeTotal;
 	}
 
 	/**
@@ -64,12 +50,16 @@ public class Solucao {
 	}
 
 	/**
-	 * Retorna a última cidade do caminho solução
+	 * Retorna a distância total do caminho solução
 	 *
-	 * @return inteiro que representa a última cidade do caminho solução
+	 * @return inteiro que representa a distância total do caminho solução
 	 */
-	public int getUltimaCidade() {
-		return caminho.get(caminho.size() - 1);
+	public double getDistanciaTotal() {
+		return distanciaTotal;
+	}
+
+	public int getPrecoTotal() {
+		return precoTotal;
 	}
 
 	/**
@@ -79,6 +69,24 @@ public class Solucao {
 	 */
 	public int getQuantCidadesNoCaminho() {
 		return caminho.size();
+	}
+
+	/**
+	 * Retorna a última cidade do caminho solução
+	 *
+	 * @return inteiro que representa a última cidade do caminho solução
+	 */
+	public int getUltimaCidade() {
+		return caminho.get(caminho.size() - 1);
+	}
+
+	/**
+	 * Incrementa a distância total com o valor passado pelo parâmetro
+	 *
+	 * @param distancia
+	 */
+	public void incrementarDistanciaTotal(double distancia) {
+		distanciaTotal = distanciaTotal + distancia;
 	}
 
 	/**
@@ -97,6 +105,10 @@ public class Solucao {
 		return caminhoRet;
 	}
 
+	public void setAltitudeTotal(int altitudeTotal) {
+		this.altitudeTotal = altitudeTotal;
+	}
+
 	/**
 	 * Seta o caminho solução com o caminho passado via parâmetro
 	 *
@@ -106,23 +118,11 @@ public class Solucao {
 		this.caminho = caminho;
 	}
 
-	public int getAltitudeTotal() {
-		return altitudeTotal;
-	}
-
-	public void setAltitudeTotal(int altitudeTotal) {
-		this.altitudeTotal = altitudeTotal;
-	}
-
-	public int getPrecoTotal() {
-		return precoTotal;
+	public void setDistanciaTotal(double distanciaTotal) {
+		this.distanciaTotal = distanciaTotal;
 	}
 
 	public void setPrecoTotal(int precoTotal) {
 		this.precoTotal = precoTotal;
-	}
-
-	public void setDistanciaTotal(double distanciaTotal) {
-		this.distanciaTotal = distanciaTotal;
 	}
 }

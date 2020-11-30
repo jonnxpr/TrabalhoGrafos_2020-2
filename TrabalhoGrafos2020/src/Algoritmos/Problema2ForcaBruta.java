@@ -43,111 +43,57 @@ public class Problema2ForcaBruta {
 	}
 
 	/**
-	 * Gera permutação inicial a ser utilizada no método que irá gerar todas as
-	 * permutações
-	 *
-	 * @param cidadeInicial
-	 * @return vetor de inteiros contendo a permutação gerada
+	 * Método buscaLargura, responsável por efetuar a busca em largura a partir de
+	 * um vértice inicial até o vértice final utilizando uma fila de vértices a
+	 * serem conhecidos e um vetor de vértices já visitados.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return
 	 */
-	private int[] geraPermutacaoInicial(int aeroportoInicial) {
-		int permutacao[] = new int[problema.getGrafo().numVertices() - 1];
-		int i = 0;
-		int pos = 0;
+	private boolean buscaLargura(int verticeInicial, int verticeFinal) {
+		Grafo grafo = problema.getGrafo();
+		boolean visitados[] = new boolean[grafo.numVertices()];
 
-		while (i < permutacao.length + 1) {
-			if (i != aeroportoInicial) {
-				permutacao[pos] = i;
-				pos++;
-				i++;
-			} else {
-				i++;
-			}
+		// seta os vértices como não visitados
+		for (int i = 0; i < visitados.length; i++) {
+			visitados[i] = false;
 		}
 
-		return permutacao;
-	}
+		// cria a lista de vértices a serem conhecidos
+		LinkedList<Integer> fila = new LinkedList<>();
 
-	/**
-	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
-	 * permutações
-	 *
-	 * @param cidadeInicial
-	 * @param array
-	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
-	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
-	 */
-	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
-		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
-		for (int i = 0; i < array.size(); i++) {
-			int aux[] = new int[problema.getGrafo().numVertices()];
-			aux[0] = aeroportoInicial;
-			// aux[aux.length - 1] = aeroportoFinal;
+		// marca o vértice inicial como visitado
+		visitados[verticeInicial] = true;
 
-			for (int j = 1; j < array.get(i).length + 1; j++) {
-				if (array.get(i)[j - 1] == aeroportoFinal) {
-					aux[j] = array.get(i)[j - 1];
-					break;
-				}
-				aux[j] = array.get(i)[j - 1];
-			}
+		// adiciona o vértice inicial na fila de vértices conhecidos
+		fila.add(verticeInicial);
 
-			caminhosCompletos.add(aux);
-		}
+		// enquanto a fila de vértices conhecidos não estiver vazia
+		while (!fila.isEmpty()) {
+			// pega o elemento presente no topo (posição inicial) da fila
+			int v = fila.poll();
+			// System.out.println("vAtual = " + v);
 
-		return caminhosCompletos;
-	}
+			// obtém a lista de adjacência do vértice obtido da fila
+			ArrayList<Integer> listaAdj = grafo.listaDeAdjacencia(v);
 
-	private ArrayList<int[]> removerPermIndesejada(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
+			// percorre a lista de adjacência
+			for (int w = 0; w < listaAdj.size(); w++) {
+				// se o vértice atual não foi visitado ainda, então o visite,
+				// marque que foi visitado e o adicione na lista de vértices a serem conhecidos
+				// seta também o vértice predecessor
+				if (visitados[listaAdj.get(w)] == false) {
+					visitados[listaAdj.get(w)] = true;
+					fila.add(listaAdj.get(w));
 
-		for (int i = 0; i < array.size(); i++) {
-			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
-				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
-				// array.get(i)[j]);
-				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
-				// array.get(i)[j + 1]));
-				// System.out.println("\n i = " + i + " Antes");
-				// imprime(array);
-				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
-					// System.out.println("vetor removido: ");
-					// imprimeVetor(array.get(i));
-					array.remove(array.get(i));
-					// System.out.println("\n i = " + i + " Depois");
-					i--;
-					imprime(array);
-					break;
+					verticePredecessorLargura[listaAdj.get(w)] = v;
 				}
 			}
 		}
-		// System.out.println("\nT2\n");
-		// imprime(array);
-		return array;
-	}
 
-	private void imprimeVetor(int[] vetor) {
-		for (int i = 0; i < vetor.length; i++) {
-			System.out.print(vetor[i] + " ");
-		}
-		System.out.println();
-	}
-
-	/**
-	 * Calcula a distância total de um determinado caminho fornecido como um vetor
-	 * de inteiros
-	 *
-	 * @param caminho
-	 * @return inteiro representando a distância total obtida no caminho
-	 */
-	private int getPrecoCaminho(int[] caminho, int aeroportoFinal) {
-		int preco = 0;
-
-		for (int i = 0; i < caminho.length - 1; i++) {
-			if (caminho[i] == aeroportoFinal) {
-				return preco;
-			}
-			preco = preco + problema.getPreco(caminho[i], caminho[i + 1]);
-		}
-
-		return preco;
+		// retorna se existe um caminho entre o vértice final e inicial
+		return (visitados[verticeFinal] == true);
 	}
 
 	/**
@@ -215,6 +161,92 @@ public class Problema2ForcaBruta {
 	}
 
 	/**
+	 * Adiciona a cidade inicial ao inicio e fim dos caminhos gerados no conjunto de
+	 * permutações
+	 *
+	 * @param cidadeInicial
+	 * @param array
+	 * @return arraylist contendo o conjunto de vetores(permutações) com o caminho
+	 *         completo, ou seja, inicia na cidade inicial e termina na mesma.
+	 */
+	private ArrayList<int[]> completarCaminhos(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
+		ArrayList<int[]> caminhosCompletos = new ArrayList<>();
+		for (int i = 0; i < array.size(); i++) {
+			int aux[] = new int[problema.getGrafo().numVertices()];
+			aux[0] = aeroportoInicial;
+			// aux[aux.length - 1] = aeroportoFinal;
+
+			for (int j = 1; j < array.get(i).length + 1; j++) {
+				if (array.get(i)[j - 1] == aeroportoFinal) {
+					aux[j] = array.get(i)[j - 1];
+					break;
+				}
+				aux[j] = array.get(i)[j - 1];
+			}
+
+			caminhosCompletos.add(aux);
+		}
+
+		return caminhosCompletos;
+	}
+
+	/**
+	 * Gera permutação inicial a ser utilizada no método que irá gerar todas as
+	 * permutações
+	 *
+	 * @param cidadeInicial
+	 * @return vetor de inteiros contendo a permutação gerada
+	 */
+	private int[] geraPermutacaoInicial(int aeroportoInicial) {
+		int permutacao[] = new int[problema.getGrafo().numVertices() - 1];
+		int i = 0;
+		int pos = 0;
+
+		while (i < permutacao.length + 1) {
+			if (i != aeroportoInicial) {
+				permutacao[pos] = i;
+				pos++;
+				i++;
+			} else {
+				i++;
+			}
+		}
+
+		return permutacao;
+	}
+
+	/**
+	 * Calcula a distância total de um determinado caminho fornecido como um vetor
+	 * de inteiros
+	 *
+	 * @param caminho
+	 * @return inteiro representando a distância total obtida no caminho
+	 */
+	private int getPrecoCaminho(int[] caminho, int aeroportoFinal) {
+		int preco = 0;
+
+		for (int i = 0; i < caminho.length - 1; i++) {
+			if (caminho[i] == aeroportoFinal) {
+				return preco;
+			}
+			preco = preco + problema.getPreco(caminho[i], caminho[i + 1]);
+		}
+
+		return preco;
+	}
+
+	/**
+	 * Retorna a solução
+	 *
+	 * @param cidadeInicial
+	 * @return solução obtida após o calculo do melhor caminho
+	 */
+	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
+		calculaMenorCaminho(aeroportoInicial, aeroportoFinal);
+		return solucao;
+	}
+
+	/**
 	 * Imprime os elementos de um ArrayList que armazena um conjunto de vetores de
 	 * inteiros
 	 *
@@ -229,15 +261,11 @@ public class Problema2ForcaBruta {
 		}
 	}
 
-	/**
-	 * Retorna a solução
-	 *
-	 * @param cidadeInicial
-	 * @return solução obtida após o calculo do melhor caminho
-	 */
-	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
-		calculaMenorCaminho(aeroportoInicial, aeroportoFinal);
-		return solucao;
+	private void imprimeVetor(int[] vetor) {
+		for (int i = 0; i < vetor.length; i++) {
+			System.out.print(vetor[i] + " ");
+		}
+		System.out.println();
 	}
 
 	/**
@@ -270,60 +298,6 @@ public class Problema2ForcaBruta {
 	}
 
 	/**
-	 * Método buscaLargura, responsável por efetuar a busca em largura a partir de
-	 * um vértice inicial até o vértice final utilizando uma fila de vértices a
-	 * serem conhecidos e um vetor de vértices já visitados.
-	 * 
-	 * @param verticeInicial
-	 * @param verticeFinal
-	 * @return
-	 */
-	private boolean buscaLargura(int verticeInicial, int verticeFinal) {
-		Grafo grafo = problema.getGrafo();
-		boolean visitados[] = new boolean[grafo.numVertices()];
-
-		// seta os vértices como não visitados
-		for (int i = 0; i < visitados.length; i++) {
-			visitados[i] = false;
-		}
-
-		// cria a lista de vértices a serem conhecidos
-		LinkedList<Integer> fila = new LinkedList<>();
-
-		// marca o vértice inicial como visitado
-		visitados[verticeInicial] = true;
-
-		// adiciona o vértice inicial na fila de vértices conhecidos
-		fila.add(verticeInicial);
-
-		// enquanto a fila de vértices conhecidos não estiver vazia
-		while (!fila.isEmpty()) {
-			// pega o elemento presente no topo (posição inicial) da fila
-			int v = fila.poll();
-			// System.out.println("vAtual = " + v);
-
-			// obtém a lista de adjacência do vértice obtido da fila
-			ArrayList<Integer> listaAdj = grafo.listaDeAdjacencia(v);
-
-			// percorre a lista de adjacência
-			for (int w = 0; w < listaAdj.size(); w++) {
-				// se o vértice atual não foi visitado ainda, então o visite,
-				// marque que foi visitado e o adicione na lista de vértices a serem conhecidos
-				// seta também o vértice predecessor
-				if (visitados[listaAdj.get(w)] == false) {
-					visitados[listaAdj.get(w)] = true;
-					fila.add(listaAdj.get(w));
-
-					verticePredecessorLargura[listaAdj.get(w)] = v;
-				}
-			}
-		}
-
-		// retorna se existe um caminho entre o vértice final e inicial
-		return (visitados[verticeFinal] == true);
-	}
-
-	/**
 	 * Método obtemCaminhoLargura, responsável por obter o caminho enter o
 	 * vértice inicial e final da busca baseado no array de vértice predecessor
 	 * resultante da busca.
@@ -343,5 +317,31 @@ public class Problema2ForcaBruta {
 			controle = verticePredecessorLargura[controle];
 		}
 		return caminho;
+	}
+
+	private ArrayList<int[]> removerPermIndesejada(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
+
+		for (int i = 0; i < array.size(); i++) {
+			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
+				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
+				// array.get(i)[j]);
+				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
+				// array.get(i)[j + 1]));
+				// System.out.println("\n i = " + i + " Antes");
+				// imprime(array);
+				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
+					// System.out.println("vetor removido: ");
+					// imprimeVetor(array.get(i));
+					array.remove(array.get(i));
+					// System.out.println("\n i = " + i + " Depois");
+					i--;
+					imprime(array);
+					break;
+				}
+			}
+		}
+		// System.out.println("\nT2\n");
+		// imprime(array);
+		return array;
 	}
 }

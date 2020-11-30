@@ -7,46 +7,6 @@ package Modelagem;
  */
 public class Problema {
 
-	// Atributos
-	private final Grafo grafo;
-
-	/**
-	 * Construtor
-	 *
-	 * @param grafo
-	 */
-	public Problema(Grafo grafo) {
-		this.grafo = grafo;
-	}
-
-	/**
-	 * Retorna o grafo que representa a instância do problema
-	 *
-	 * @return grafo representando a instância do problema
-	 */
-	public Grafo getGrafo() {
-		return this.grafo;
-	}
-
-	/**
-	 * Retorna o peso da aresta entre dois vértices do grafo
-	 *
-	 * @param inicio
-	 * @param fim
-	 * @return peso de uma aresta entre dois vértices
-	 */
-	public double getDistancia(int v1, int v2) {
-		return this.grafo.getDistancia(v1, v2);
-	}
-
-	public int getAltitude(int v1, int v2) {
-		return this.grafo.getAltitude(v1, v2);
-	}
-
-	public int getPreco(int v1, int v2) {
-		return this.grafo.getPreco(v1, v2);
-	}
-
 	/*
 	 * unit: M - Milhas K - Quilometro N - Milhas Nauticas
 	 */
@@ -67,5 +27,45 @@ public class Problema {
 			}
 			return (dist);
 		}
+	}
+
+	// Atributos
+	private final Grafo grafo;
+
+	/**
+	 * Construtor
+	 *
+	 * @param grafo
+	 */
+	public Problema(Grafo grafo) {
+		this.grafo = grafo;
+	}
+
+	public int getAltitude(int v1, int v2) {
+		return this.grafo.getAltitude(v1, v2);
+	}
+
+	/**
+	 * Retorna o peso da aresta entre dois vértices do grafo
+	 *
+	 * @param inicio
+	 * @param fim
+	 * @return peso de uma aresta entre dois vértices
+	 */
+	public double getDistancia(int v1, int v2) {
+		return this.grafo.getDistancia(v1, v2);
+	}
+
+	/**
+	 * Retorna o grafo que representa a instância do problema
+	 *
+	 * @return grafo representando a instância do problema
+	 */
+	public Grafo getGrafo() {
+		return this.grafo;
+	}
+
+	public int getPreco(int v1, int v2) {
+		return this.grafo.getPreco(v1, v2);
 	}
 }

@@ -33,25 +33,6 @@ public class Problema2Heuristica {
 	}
 
 	/**
-	 * Retorna a cidade mais próxima da cidade atual, ou seja, o vértice cuja
-	 * aresta tem menor peso a partir do vértice atual
-	 *
-	 * @param cidadeAtual
-	 * @param lista
-	 * @return vértice representando a cidade mais próxima da cidade atual
-	 */
-	private int getVerticeComArestaDeMenorPeso(int aeroportoAtual, ArrayList<Integer> lista) {
-		int verticeEscolhido = lista.get(0);
-
-		for (int i = 1; i < lista.size(); i++) {
-			if (problema.getPreco(aeroportoAtual, lista.get(i)) < problema.getPreco(aeroportoAtual, verticeEscolhido)) {
-				verticeEscolhido = lista.get(i);
-			}
-		}
-		return verticeEscolhido;
-	}
-
-	/**
 	 * Calcula o melhor percurso partindo de uma determinada cidade inicial
 	 *
 	 * @param cidadeInicial
@@ -115,5 +96,24 @@ public class Problema2Heuristica {
 	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
 		calculaMenorCaminho(aeroportoInicial, aeroportoFinal);
 		return solucao;
+	}
+
+	/**
+	 * Retorna a cidade mais próxima da cidade atual, ou seja, o vértice cuja
+	 * aresta tem menor peso a partir do vértice atual
+	 *
+	 * @param cidadeAtual
+	 * @param lista
+	 * @return vértice representando a cidade mais próxima da cidade atual
+	 */
+	private int getVerticeComArestaDeMenorPeso(int aeroportoAtual, ArrayList<Integer> lista) {
+		int verticeEscolhido = lista.get(0);
+
+		for (int i = 1; i < lista.size(); i++) {
+			if (problema.getPreco(aeroportoAtual, lista.get(i)) < problema.getPreco(aeroportoAtual, verticeEscolhido)) {
+				verticeEscolhido = lista.get(i);
+			}
+		}
+		return verticeEscolhido;
 	}
 }

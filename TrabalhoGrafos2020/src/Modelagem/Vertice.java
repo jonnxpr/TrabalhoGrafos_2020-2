@@ -7,14 +7,6 @@ public class Vertice {
 	private double latitude;
 	private double longitude;
 
-	public Vertice(String labelVertice, int valorRepresentativo, double latitude, double longitude) {
-		this.labelVertice = labelVertice;
-		this.valorRepresentativo = valorRepresentativo;
-		this.grau = 0;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-
 	public Vertice(int valorRepresentativo, double latitude, double longitude) {
 		this.labelVertice = "NoLabel";
 		this.valorRepresentativo = valorRepresentativo;
@@ -23,44 +15,52 @@ public class Vertice {
 		this.longitude = longitude;
 	}
 
-	public String getLabelVertice() {
-		return labelVertice;
-	}
-
-	public void setLabelVertice(String labelVertice) {
+	public Vertice(String labelVertice, int valorRepresentativo, double latitude, double longitude) {
 		this.labelVertice = labelVertice;
-	}
-
-	public int getValorRepresentativo() {
-		return valorRepresentativo;
-	}
-
-	public void setValorRepresentativo(int valorRepresentativo) {
 		this.valorRepresentativo = valorRepresentativo;
+		this.grau = 0;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	public int getGrau() {
 		return grau;
 	}
 
-	public void setGrau(int grau) {
-		this.grau = grau;
+	public String getLabelVertice() {
+		return labelVertice;
 	}
 
 	public double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
 	public double getLongitude() {
 		return longitude;
 	}
 
+	public int getValorRepresentativo() {
+		return valorRepresentativo;
+	}
+
+	public void setGrau(int grau) {
+		this.grau = grau;
+	}
+
+	public void setLabelVertice(String labelVertice) {
+		this.labelVertice = labelVertice;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public void setValorRepresentativo(int valorRepresentativo) {
+		this.valorRepresentativo = valorRepresentativo;
 	}
 
 	@Override

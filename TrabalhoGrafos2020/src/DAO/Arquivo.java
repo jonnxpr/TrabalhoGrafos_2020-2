@@ -17,36 +17,13 @@ import Modelagem.Vertice;
  */
 public class Arquivo {
 
-	@SuppressWarnings("resource")
-	public static ArrayList<Vertice> getVertices(String filename) {
-		int valorRep = 0;
-
-		ArrayList<Vertice> vertices = new ArrayList<>();
-
-		try {
-			File file = new File(filename);
-
-			// tenta fazer abertura do arquivo
-			Scanner in = new Scanner(file);
-
-			int quantVertices = Integer.parseInt(in.nextLine());
-			// System.out.println(quantVertices);
-
-			for (int i = 0; i < quantVertices; i++) {
-				String[] buffer = in.nextLine().split(" ");
-				vertices.add(
-						new Vertice(buffer[0], valorRep, Double.parseDouble(buffer[1]), Double.parseDouble(buffer[2])));
-				valorRep = valorRep + 1;
+	public static Vertice findByName(String label, ArrayList<Vertice> vertices) {
+		for (Vertice v : vertices) {
+			if (label.equals(v.getLabelVertice())) {
+				return v;
 			}
-
-			in.close();
-
-		} catch (Exception e) {
-			System.out.println("Ocorreu um erro na tentativa de ler o arquivo " + filename + ".");
-			// e.printStackTrace();
 		}
-
-		return vertices;
+		return null;
 	}
 
 	@SuppressWarnings("resource")
@@ -119,15 +96,6 @@ public class Arquivo {
 		}
 
 		return grafo;
-	}
-
-	public static Vertice findByName(String label, ArrayList<Vertice> vertices) {
-		for (Vertice v : vertices) {
-			if (label.equals(v.getLabelVertice())) {
-				return v;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -235,6 +203,38 @@ public class Arquivo {
 		}
 
 		return matriz;
+	}
+
+	@SuppressWarnings("resource")
+	public static ArrayList<Vertice> getVertices(String filename) {
+		int valorRep = 0;
+
+		ArrayList<Vertice> vertices = new ArrayList<>();
+
+		try {
+			File file = new File(filename);
+
+			// tenta fazer abertura do arquivo
+			Scanner in = new Scanner(file);
+
+			int quantVertices = Integer.parseInt(in.nextLine());
+			// System.out.println(quantVertices);
+
+			for (int i = 0; i < quantVertices; i++) {
+				String[] buffer = in.nextLine().split(" ");
+				vertices.add(
+						new Vertice(buffer[0], valorRep, Double.parseDouble(buffer[1]), Double.parseDouble(buffer[2])));
+				valorRep = valorRep + 1;
+			}
+
+			in.close();
+
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro na tentativa de ler o arquivo " + filename + ".");
+			// e.printStackTrace();
+		}
+
+		return vertices;
 	}
 
 }

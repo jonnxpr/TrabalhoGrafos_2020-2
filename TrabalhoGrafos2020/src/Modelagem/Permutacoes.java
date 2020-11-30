@@ -15,6 +15,33 @@ public class Permutacoes {
 	private ArrayList<int[]> permutacoes; // guarda o conjunto de permutações geradas
 
 	/**
+	 * Retorna o conjunto de permutações geradas a partir de uma permutação
+	 * inicial passada via parâmetro
+	 *
+	 * @param vetor permutação inicial
+	 * @return conjunto de permutações geradas
+	 */
+	public ArrayList<int[]> getPermutacoes(int[] vetor) {
+		permuta(vetor);
+		return permutacoes;
+	}
+
+	/**
+	 * Adiciona a permutação atual no ArrayList permutacoes
+	 */
+	private void imprime() {
+		int aux[] = new int[permutacaoAtual.length];
+		// System.out.println();
+		// System.out.print("(" + cont + ") : ");
+		for (int i = 0; i < permutacaoAtual.length; i++) {
+			// System.out.print(p[i] + " ");
+			aux[i] = permutacaoAtual[i];
+		}
+
+		permutacoes.add(aux);
+	}
+
+	/**
 	 * Faz a chamada recursiva do método permuta e preenche o ArrayList permutacoes
 	 * com as permutações obtidas
 	 *
@@ -59,32 +86,5 @@ public class Permutacoes {
 			}
 
 		}
-	}
-
-	/**
-	 * Adiciona a permutação atual no ArrayList permutacoes
-	 */
-	private void imprime() {
-		int aux[] = new int[permutacaoAtual.length];
-		// System.out.println();
-		// System.out.print("(" + cont + ") : ");
-		for (int i = 0; i < permutacaoAtual.length; i++) {
-			// System.out.print(p[i] + " ");
-			aux[i] = permutacaoAtual[i];
-		}
-
-		permutacoes.add(aux);
-	}
-
-	/**
-	 * Retorna o conjunto de permutações geradas a partir de uma permutação
-	 * inicial passada via parâmetro
-	 *
-	 * @param vetor permutação inicial
-	 * @return conjunto de permutações geradas
-	 */
-	public ArrayList<int[]> getPermutacoes(int[] vetor) {
-		permuta(vetor);
-		return permutacoes;
 	}
 }
