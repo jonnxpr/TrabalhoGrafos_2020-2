@@ -73,7 +73,7 @@ public class Grafo {
 	}
 
 	public int getPreco(int vertice1, int vertice2) {
-		System.out.println("V1 = " + vertice1 + "\nV2 =" + vertice2);
+		//System.out.println("V1 = " + vertice1 + "\nV2 =" + vertice2);
 		return this.matrizAdjacencia[vertice1][vertice2].getPreco();
 	}
 

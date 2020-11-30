@@ -81,12 +81,13 @@ import javafx.util.Pair;
 */
 
 /**
- * Classe Tela
- * Responsável por gerenciar toda a interação do usuário e mostrar os resultados obtidos pela execução dos algoritmos.
+ * Classe Tela Responsável por gerenciar toda a interação do usuário e mostrar
+ * os resultados obtidos pela execução dos algoritmos.
  */
 public class Tela extends JFrame {
 
 	private static final long serialVersionUID = -5564501739744869121L;
+
 	/**
 	 * Inicializa a aplicação
 	 */
@@ -102,8 +103,8 @@ public class Tela extends JFrame {
 			}
 		});
 	}
-	
-	//Atributos
+
+	// Atributos
 	private JPanel contentPane;
 	private JPanel painelDoMundo;
 	private JComboBox<String> comboBoxAlgoritmosDisponiveis;
@@ -125,29 +126,33 @@ public class Tela extends JFrame {
 	 * Cria o frame inicial da aplicação.
 	 */
 	public Tela() {
-		//permite dizer se o grafo adicionado é direcionado ou não quando é importado
+		// permite dizer se o grafo adicionado é direcionado ou não quando é importado
 		direcionado = false;
-		//auxilia no momento de alternar entre os possíveis valores que as arestas podem representar
+		// auxilia no momento de alternar entre os possíveis valores que as arestas
+		// podem representar
 		problema23Ativado = false;
-		//seta configurações de HUD e UI
+		// seta configurações de HUD e UI
 		setAutoRequestFocus(false);
 		setTitle("Trabalho de Grafos - Jonathan Douglas");
 		setResizable(false);
 		initComponents();
 		inicializaMapa();
 	}
-	
+
 	/**
-	 * Responsável por inserir um algoritmo na lista de algoritmos disponíveis para execução
+	 * Responsável por inserir um algoritmo na lista de algoritmos disponíveis para
+	 * execução
+	 * 
 	 * @param nomeAlgoritmo
 	 */
 	private void addAlgoritmoDisponivel(String nomeAlgoritmo) {
 		algoritmosDisponiveis.add(nomeAlgoritmo);
 		comboBoxAlgoritmosDisponiveis.addItem(nomeAlgoritmo);
 	}
-	
+
 	/**
 	 * Responsável por inserir um grafo na lista de grafos disponíveis para uso
+	 * 
 	 * @param nomeGrafo
 	 * @param grafo
 	 */
@@ -157,7 +162,7 @@ public class Tela extends JFrame {
 			comboBoxGrafosDisponiveis.addItem(nomeGrafo);
 		}
 	}
-	
+
 	/**
 	 * Adiciona os algoritmos disponíveis na lista de algoritmos disponíveis
 	 */
@@ -171,7 +176,7 @@ public class Tela extends JFrame {
 		addAlgoritmoDisponivel("Problema 4 - Heuristica");
 		addAlgoritmoDisponivel("Busca em Largura");
 	}
-	
+
 	/**
 	 * Faz a chamada do algoritmo de busca em largura, recebendo os vértices via UI
 	 */
@@ -306,7 +311,9 @@ public class Tela extends JFrame {
 	}
 
 	/**
-	 * Responsável por inicializar um grafo, mostrá-lo na HUD e permitir ao usuário visualizar suas informações
+	 * Responsável por inicializar um grafo, mostrá-lo na HUD e permitir ao usuário
+	 * visualizar suas informações
+	 * 
 	 * @param nomeGrafo
 	 */
 	@SuppressWarnings("deprecation")
@@ -330,7 +337,7 @@ public class Tela extends JFrame {
 
 		Grafo grafo = grafosDisponiveis.get(nomeGrafo);
 		// System.out.println("DEBUG GRAFO: " + nomeGrafo + "\n");
-		grafo.imprimeMatrizAdj();
+		//grafo.imprimeMatrizAdj();
 
 		graph = new mxGraph();
 		Object parent = graph.getDefaultParent();
@@ -391,13 +398,13 @@ public class Tela extends JFrame {
 		painelDoMundo.revalidate();
 		painelDoMundo.repaint();
 	}
-	
+
 	/**
-	 * Executa o algoritmo de força bruta para o problema 1
-	 * Encontrar o menor caminho entre 2 aeroportos, medido pelas distâncias das rotas
+	 * Executa o algoritmo de força bruta para o problema 1 Encontrar o menor
+	 * caminho entre 2 aeroportos, medido pelas distâncias das rotas
 	 */
 	private void execProblema1ForcaBruta() {
-		//Valida os vértices
+		// Valida os vértices
 		verticePredecessorLargura = new int[grafosDisponiveis
 				.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem())).numVertices()];
 		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null
@@ -411,8 +418,8 @@ public class Tela extends JFrame {
 					"Você deve preencher o vértice inicial e final com valores válidos.");
 			return;
 		}
-		
-		//Vê se há possibilidade de alcançar um vértice final a partir do inicial
+
+		// Vê se há possibilidade de alcançar um vértice final a partir do inicial
 		if (iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()),
 				Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
 			JOptionPane.showMessageDialog(rootPane,
@@ -422,9 +429,10 @@ public class Tela extends JFrame {
 
 		int aeroportoInicial = Integer.parseInt(textFieldVerticeInicial.getText());
 		int aeroportoFinal = Integer.parseInt(textFieldVerticeFinal.getText());
-		
-		//Instancia o problema e a solução
-		//Calcula o tempo de execução da rotina principal responsável por resolver o problema especificado
+
+		// Instancia o problema e a solução
+		// Calcula o tempo de execução da rotina principal responsável por resolver o
+		// problema especificado
 		Problema1ForcaBruta forcaBruta1;
 
 		Problema problema;
@@ -454,15 +462,16 @@ public class Tela extends JFrame {
 		System.out.println("");
 
 	}
-	
+
 	/**
 	 * 
-	 * Executa o algoritmo baseado na heurística do "Vizinho mais próximo" para o problema 1
-	 * Encontrar o menor caminho entre 2 aeroportos, medido pelas distâncias das rotas
+	 * Executa o algoritmo baseado na heurística do "Vizinho mais próximo" para o
+	 * problema 1 Encontrar o menor caminho entre 2 aeroportos, medido pelas
+	 * distâncias das rotas
 	 *
 	 */
 	private void execProblema1Heuristica() {
-		//Valida os vértices
+		// Valida os vértices
 		verticePredecessorLargura = new int[grafosDisponiveis
 				.get(String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem())).numVertices()];
 		if (textFieldVerticeInicial.getText() == null || textFieldVerticeFinal.getText() == null
@@ -476,18 +485,18 @@ public class Tela extends JFrame {
 					"Você deve preencher o vértice inicial e final com valores válidos.");
 			return;
 		}
-		
-		//Vê se há possibilidade de alcançar um vértice final a partir do inicial
+
+		// Vê se há possibilidade de alcançar um vértice final a partir do inicial
 		if (iniciaBuscaEmLargura(Integer.valueOf(textFieldVerticeInicial.getText()),
 				Integer.valueOf(textFieldVerticeFinal.getText())) == false) {
 			JOptionPane.showMessageDialog(rootPane,
 					"Não é possível fazer a operação desejada pois não existe um caminho entre o vertice inicial e final.");
 			return;
 		}
-		
-		
-		//Instancia o problema e a solução
-		//Calcula o tempo de execução da rotina principal responsável por resolver o problema especificado
+
+		// Instancia o problema e a solução
+		// Calcula o tempo de execução da rotina principal responsável por resolver o
+		// problema especificado
 
 		int aeroportoInicial = Integer.parseInt(textFieldVerticeInicial.getText());
 		int aeroportoFinal = Integer.parseInt(textFieldVerticeFinal.getText());
@@ -520,10 +529,10 @@ public class Tela extends JFrame {
 		System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
 		System.out.println("");
 	}
-	
+
 	/**
-	 * Executa o algoritmo de força bruta para o problema 2
-	 * Encontrar a menor tarifa entre 2 aeroportos
+	 * Executa o algoritmo de força bruta para o problema 2 Encontrar a menor tarifa
+	 * entre 2 aeroportos
 	 */
 	private void execProblema2ForcaBruta() {
 		problema23Ativado = true;
@@ -591,10 +600,10 @@ public class Tela extends JFrame {
 
 		problema23Ativado = false;
 	}
-	
+
 	/**
-	 * Executa o algoritmo baseado na heurística do "Vizinho mais próximo" para o problema 2
-	 * Encontrar a menor tarifa entre 2 aeroportos
+	 * Executa o algoritmo baseado na heurística do "Vizinho mais próximo" para o
+	 * problema 2 Encontrar a menor tarifa entre 2 aeroportos
 	 */
 	private void execProblema2Heuristica() {
 		// System.out.println("2 heuristica");
@@ -661,18 +670,18 @@ public class Tela extends JFrame {
 	}
 
 	/**
-	 * Executa os algoritmos de força bruta e o baseado na heurística do "Vizinho mais próximo" para o problema 3
-	 * Encontrar a menor tarifa para uma “viagem ao redor do mundo” visitando cada cidade uma vez
+	 * Executa os algoritmos de força bruta e o baseado na heurística do "Vizinho
+	 * mais próximo" para o problema 3 Encontrar a menor tarifa para uma “viagem ao
+	 * redor do mundo” visitando cada cidade uma vez
 	 */
 	private void execProblema3ForcaBrutaHeuristica() {
-		//alterna o significado do peso das arestas
+		// alterna o significado do peso das arestas
 		problema23Ativado = true;
-		
-		//Valida os vértices
+
+		// Valida os vértices
 		if (comboBoxGrafosDisponiveis.getSelectedItem() != null) {
 			String nomeGrafo = String.valueOf(comboBoxGrafosDisponiveis.getSelectedItem());
 			criaGrafo(nomeGrafo);
-
 		} else {
 			JOptionPane.showMessageDialog(rootPane, "Você precisa selecionar um grafo para carregar.");
 			return;
@@ -709,8 +718,7 @@ public class Tela extends JFrame {
 		heuristica = new Problema3HeuristicaSecundaria(problema);
 
 		/*
-		 * ************************************* 
-		 * Solução Força bruta Máx aeroportos: 11
+		 * ************************************* Solução Força bruta Máx aeroportos: 11
 		 * 
 		 * Comentar trecho de código caso não vá utilizar o algoritmo
 		 *************************************
@@ -720,7 +728,7 @@ public class Tela extends JFrame {
 		solucao = forcaBruta.getSolucao(aeroportoInicial);
 
 		tempoFinal = System.currentTimeMillis();
-		
+
 		// habilitar a linha abaixo caso deseje ver o caminho o obtido pela solução
 		solucao.mostrarCaminho();
 
@@ -731,8 +739,8 @@ public class Tela extends JFrame {
 		System.out.println("");
 
 		/*
-		 * ************************************* 
-		 * Solução Heurística Gulosa Vizinho mais próximo
+		 * ************************************* Solução Heurística Gulosa Vizinho mais
+		 * próximo
 		 * 
 		 * Comentar trecho de código caso não vá utilizar o algoritmo
 		 *************************************
@@ -754,8 +762,7 @@ public class Tela extends JFrame {
 		System.out.println("");
 
 		/*
-		 * ************************************* 
-		 * DESABILITADA MOMENTANEAMENTE!
+		 * ************************************* DESABILITADA MOMENTANEAMENTE!
 		 * 
 		 * Solução Heurística Inserção mais barata
 		 * 
@@ -779,35 +786,40 @@ public class Tela extends JFrame {
 		 * System.out.printf("Tempo total de execução: %.3f ms%n", (tempoFinal -
 		 * tempoInicial) / 1000d);
 		 */
-		
-		//retorna as arestas ao seu significado padrão
+
+		// retorna as arestas ao seu significado padrão
 		problema23Ativado = false;
 	}
 
 	/**
-	 * Responsável por fazer a chamada da execução do algoritmo de força bruta para resolver o problema 4
+	 * Responsável por fazer a chamada da execução do algoritmo de força bruta para
+	 * resolver o problema 4
 	 * 
-	 * Considerando que 2 trechos que se cruzam não podem voar na mesma altitude, proponha uma altura de
-	 * voo para cada trecho, começando a 10.000 pés e variando de mil em mil. Para economizar combustível,
-     * o somatório das altitudes deve ser a mínima possível.
+	 * Considerando que 2 trechos que se cruzam não podem voar na mesma altitude,
+	 * proponha uma altura de voo para cada trecho, começando a 10.000 pés e
+	 * variando de mil em mil. Para economizar combustível, o somatório das
+	 * altitudes deve ser a mínima possível.
 	 */
 	private void execProblema4ForcaBruta() {
 		System.out.println("4 forca bruta");
 	}
-	
+
 	/**
-	 * Responsável por fazer a chamada da execução do algoritmo baseado em heurística para resolver o problema 4
+	 * Responsável por fazer a chamada da execução do algoritmo baseado em
+	 * heurística para resolver o problema 4
 	 * 
-	 * Considerando que 2 trechos que se cruzam não podem voar na mesma altitude, proponha uma altura de
-	 * voo para cada trecho, começando a 10.000 pés e variando de mil em mil. Para economizar combustível,
-     * o somatório das altitudes deve ser a mínima possível.
+	 * Considerando que 2 trechos que se cruzam não podem voar na mesma altitude,
+	 * proponha uma altura de voo para cada trecho, começando a 10.000 pés e
+	 * variando de mil em mil. Para economizar combustível, o somatório das
+	 * altitudes deve ser a mínima possível.
 	 */
 	private void execProblema4Heuristica() {
 		System.out.println("4 heuristica");
 	}
-	
+
 	/**
 	 * Faz a chamada dos métodos responsáveis por resolver os problemas
+	 * 
 	 * @param labelProblema
 	 * @param nomeGrafo
 	 */
@@ -850,6 +862,7 @@ public class Tela extends JFrame {
 
 	/**
 	 * Gera um grafo aleatório com um número de vértices quaisquer
+	 * 
 	 * @param numVertices
 	 * @return
 	 */
@@ -859,9 +872,10 @@ public class Tela extends JFrame {
 		gerarMatrizAleatoria(grafo, getRandomDoubleBetweenRange(0, 100), getRandomDoubleBetweenRange(101, 1000));
 		return grafo;
 	}
-	
+
 	/**
 	 * Gera um grafo completo com um número de vértices quaisquer
+	 * 
 	 * @param numVertices
 	 * @return
 	 */
@@ -871,10 +885,11 @@ public class Tela extends JFrame {
 		gerarMatrizCompleta(grafo, getRandomDoubleBetweenRange(0, 100), getRandomDoubleBetweenRange(101, 1000));
 		return grafo;
 	}
-	
+
 	/**
-	 * Gera uma matriz de adjacência aleatória, randomizando os valores dos pesos referentes aos elementos que uma
-	 * aresta pode representar (distância, tarifa e altitude)
+	 * Gera uma matriz de adjacência aleatória, randomizando os valores dos pesos
+	 * referentes aos elementos que uma aresta pode representar (distância, tarifa e
+	 * altitude)
 	 * 
 	 * @param grafo
 	 * @param min
@@ -892,8 +907,9 @@ public class Tela extends JFrame {
 	}
 
 	/**
-	 * Gera uma matriz completa("grafo completo"), randomizando os valores dos pesos referentes aos elementos que uma
-	 * aresta pode representar (distância, tarifa e altitude)
+	 * Gera uma matriz completa("grafo completo"), randomizando os valores dos pesos
+	 * referentes aos elementos que uma aresta pode representar (distância, tarifa e
+	 * altitude)
 	 * 
 	 * @param grafo contém a matriz que vai ser gerada
 	 * @param min   valor mínimo
@@ -907,9 +923,10 @@ public class Tela extends JFrame {
 			}
 		}
 	}
-	
+
 	/**
 	 * gera um número randômico entre min e max
+	 * 
 	 * @param min
 	 * @param max
 	 * @return
@@ -1152,8 +1169,7 @@ public class Tela extends JFrame {
 		textAreaAeroportos.setForeground(Color.WHITE);
 		textAreaAeroportos.setBackground(Color.DARK_GRAY);
 		scrollPane_1.setViewportView(textAreaAeroportos);
-		
-		
+
 		/*
 		 * Métodos de interação com os objetos da UI
 		 */
@@ -1267,6 +1283,7 @@ public class Tela extends JFrame {
 
 	/**
 	 * Verifica se uma string representa um número
+	 * 
 	 * @param strNum
 	 * @return
 	 */
@@ -1303,7 +1320,7 @@ public class Tela extends JFrame {
 		}
 		return caminho;
 	}
-	
+
 	/**
 	 * apaga o conjunto de grafos disponíveis para uso
 	 */
@@ -1311,7 +1328,7 @@ public class Tela extends JFrame {
 		grafosDisponiveis.clear();
 		comboBoxGrafosDisponiveis.removeAllItems();
 	}
-	
+
 	/**
 	 * salva em arquivo cada um dos grafos disponíveis para uso
 	 */

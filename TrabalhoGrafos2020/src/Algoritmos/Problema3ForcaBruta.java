@@ -56,8 +56,9 @@ public class Problema3ForcaBruta {
 	private void calculaMenorCaminho(int aeroportoInicial) {
 		// gera todas as permutações
 		caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
-		// imprime(caminhos);
-		// completa os caminhos de forma a ser possível sair da aeroporto inicial e voltar
+		//imprime(caminhos);
+		// completa os caminhos de forma a ser possível sair da aeroporto inicial e
+		// voltar
 		// para a mesma
 		// ArrayList<int[]> caminhosDesejados = removerPermIndesejada(caminhos);
 		ArrayList<int[]> caminhosCompletos = completarCaminhos(aeroportoInicial, caminhos);
@@ -89,8 +90,8 @@ public class Problema3ForcaBruta {
 	}
 
 	/**
-	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto de
-	 * permutações
+	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto
+	 * de permutações
 	 *
 	 * @param aeroportoInicial
 	 * @param array
@@ -181,28 +182,5 @@ public class Problema3ForcaBruta {
 			}
 			System.out.println("");
 		}
-	}
-
-	private ArrayList<int[]> removerPermIndesejada(ArrayList<int[]> array) {
-		for (int i = 0; i < array.size(); i++) {
-			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
-				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
-				// array.get(i)[j]);
-				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
-				// array.get(i)[j + 1]));
-				// System.out.println("\n i = " + i + " Antes");
-				// imprime(array);
-				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
-					array.remove(array.get(i));
-					// System.out.println("\n i = " + i + " Depois");
-					i--;
-					imprime(array);
-					break;
-				}
-			}
-		}
-		// System.out.println("\nT2\n");
-		// imprime(array);
-		return array;
 	}
 }

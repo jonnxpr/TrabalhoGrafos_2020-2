@@ -62,7 +62,7 @@ public class Permutacoes {
 	private void permuta(int[] vet, int n) {
 
 		if (n == vet.length) {
-			//imprime();
+			imprime();
 		} else {
 
 			for (int i = 0; i < vet.length; i++) {

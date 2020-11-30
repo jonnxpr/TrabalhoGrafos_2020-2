@@ -120,16 +120,17 @@ public class Problema2ForcaBruta {
 			caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
 			// System.out.println("\n\nperminiciais\n\n");
 			// imprime(caminhos);
-			// completa os caminhos de forma a ser possível sair da aeroporto inicial e voltar
+			// completa os caminhos de forma a ser possível sair da aeroporto inicial e
+			// voltar
 			// para a mesma
 			ArrayList<int[]> caminhosDesejados = removerPermIndesejada(aeroportoInicial, aeroportoFinal, caminhos);
-			//System.out.println("\n\nCaminhos Des: \n\n");
-			//System.out.println("\n\nCaminhos Comp: \n\n");
-			//imprime(caminhosDesejados);
+			// System.out.println("\n\nCaminhos Des: \n\n");
+			// System.out.println("\n\nCaminhos Comp: \n\n");
+			// imprime(caminhosDesejados);
 			caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
-			//imprime(caminhosDesejados);
-			//System.out.println("tamDesej =" + caminhosDesejados.size());
-			//System.out.println(caminhosDesejados.isEmpty());
+			// imprime(caminhosDesejados);
+			// System.out.println("tamDesej =" + caminhosDesejados.size());
+			// System.out.println(caminhosDesejados.isEmpty());
 
 			int menorCaminho[] = caminhosDesejados.get(0);
 			ArrayList<Integer> menorCaminhoList = new ArrayList<>();
@@ -170,8 +171,8 @@ public class Problema2ForcaBruta {
 	}
 
 	/**
-	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto de
-	 * permutações
+	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto
+	 * de permutações
 	 *
 	 * @param aeroportoInicial
 	 * @param array
@@ -344,7 +345,7 @@ public class Problema2ForcaBruta {
 					array.remove(array.get(i));
 					// System.out.println("\n i = " + i + " Depois");
 					i--;
-					//imprime(array);
+					// imprime(array);
 					break;
 				}
 			}

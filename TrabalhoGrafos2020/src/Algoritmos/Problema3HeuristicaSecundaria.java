@@ -22,8 +22,8 @@ import javafx.util.Pair;
  * Classe Heuristica Implementa a heurística da "inserção mais barata"
  *
  * Funcionamento: Consiste em construir uma rota passo a passo, partindo de rota
- * inicial envolvendo 3 aeroportos (obtidas por um método qualquer) e adicionar a
- * cada passo, a cidade k (ainda não visitada) entre a ligação (i, j) de
+ * inicial envolvendo 3 aeroportos (obtidas por um método qualquer) e adicionar
+ * a cada passo, a cidade k (ainda não visitada) entre a ligação (i, j) de
  * aeroportos já visitadas, cujo custo de inserção seja o mais barato
  *
  * Complexidade: O(n^3)

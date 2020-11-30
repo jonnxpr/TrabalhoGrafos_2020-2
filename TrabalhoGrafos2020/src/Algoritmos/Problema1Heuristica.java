@@ -51,7 +51,8 @@ public class Problema1Heuristica {
 		caminhoTemp.add(aeroportoInicial); // adiciona a aeroporto inicial ao início do percurso
 
 		// utiliza o conceito de aeroporto atual (vértice atual) e
-		// aeroporto mais próxima(vértice cuja aresta tem menor peso a partir do vértice
+		// aeroporto mais próxima(vértice cuja aresta tem menor peso a partir do
+		// vértice
 		// atual)
 		int aeroportoAtual = aeroportoInicial;
 		int aeroportoMaisProximo;
@@ -108,8 +109,8 @@ public class Problema1Heuristica {
 	}
 
 	/**
-	 * Retorna a aeroporto mais próxima da aeroporto atual, ou seja, o vértice cuja
-	 * aresta tem menor peso a partir do vértice atual
+	 * Retorna a aeroporto mais próxima da aeroporto atual, ou seja, o vértice
+	 * cuja aresta tem menor peso a partir do vértice atual
 	 *
 	 * @param aeroportoAtual
 	 * @param lista

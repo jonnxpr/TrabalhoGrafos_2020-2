@@ -116,14 +116,15 @@ public class Problema1ForcaBruta {
 		// System.out.println("aeroInicial = " + aeroportoInicial + "\naeroFinal =" +
 		// aeroportoFinal);
 
-		//System.out.println("Matriz de adj:\n");
-		//problema.getGrafo().imprimeMatrizAdj();
+		// System.out.println("Matriz de adj:\n");
+		// problema.getGrafo().imprimeMatrizAdj();
 
 		if (aeroportoInicial != aeroportoFinal) {
 			caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
-			// System.out.println("\n\nperminiciais\n\n");
-			// imprime(caminhos);
-			// completa os caminhos de forma a ser possível sair da aeroporto inicial e voltar
+			//System.out.println("\n\nperminiciais\n\n");
+			//imprime(caminhos);
+			// completa os caminhos de forma a ser possível sair da aeroporto inicial e
+			// voltar
 			// para a mesma
 			ArrayList<int[]> caminhosDesejados = removerPermIndesejada(caminhos);
 			//System.out.println("\n\nCaminhos Desesejados: \n\n");
@@ -173,8 +174,8 @@ public class Problema1ForcaBruta {
 	}
 
 	/**
-	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto de
-	 * permutações
+	 * Adiciona a aeroporto inicial ao inicio e fim dos caminhos gerados no conjunto
+	 * de permutações
 	 *
 	 * @param aeroportoInicial
 	 * @param array
@@ -342,12 +343,12 @@ public class Problema1ForcaBruta {
 				// System.out.println("\n i = " + i + " Antes");
 				// imprime(array);
 				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
-					//System.out.println("vetor removido: ");
-					//imprimeVetor(array.get(i));
+					// System.out.println("vetor removido: ");
+					// imprimeVetor(array.get(i));
 					array.remove(array.get(i));
 					// System.out.println("\n i = " + i + " Depois");
 					i--;
-					imprime(array);
+					//imprime(array);
 					break;
 				}
 			}

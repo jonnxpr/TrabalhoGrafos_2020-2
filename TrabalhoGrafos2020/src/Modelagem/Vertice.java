@@ -10,8 +10,8 @@
 package Modelagem;
 
 public class Vertice {
-	
-	//Atributos
+
+	// Atributos
 	private String labelVertice;
 	private int valorRepresentativo;
 	private int grau;
