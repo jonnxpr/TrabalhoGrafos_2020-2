@@ -68,7 +68,7 @@ public class Problema1Heuristica {
 		int aeroportoMaisProximo;
 		double distanciaTotal = 0; // distancia total obtida no percurso
 		int verticeDeMenorAresta; // vértice cujo peso é o menor a patir do vértice atual
-		int nCidades = problema.getGrafo().numVertices(); // obtém a quantidade de cidades do problema
+		int nAeroportos = problema.getGrafo().numVertices(); // obtém a quantidade de cidades do problema
 
 		// enquanto o caminho não houver a mesma quantidade de cidades do problema
 		// inicial
@@ -98,7 +98,7 @@ public class Problema1Heuristica {
 		}
 
 		// adiciona a volta para a cidade inicial
-		//caminhoTemp.add(aeroportoFinal);
+		// caminhoTemp.add(aeroportoFinal);
 
 		// seta o melhor percurso obtido
 		solucao.setCaminho(caminhoTemp);

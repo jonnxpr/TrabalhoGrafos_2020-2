@@ -30,7 +30,7 @@ public class Arquivo {
 			Scanner in = new Scanner(file);
 
 			int quantVertices = Integer.parseInt(in.nextLine());
-			System.out.println(quantVertices);
+			// System.out.println(quantVertices);
 
 			for (int i = 0; i < quantVertices; i++) {
 				String[] buffer = in.nextLine().split(" ");

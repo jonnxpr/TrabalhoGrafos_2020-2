@@ -113,7 +113,7 @@ public class Grafo {
 	public double getDistancia(int vertice1, int vertice2) {
 		return (this.matrizAdjacencia[vertice1][vertice2] != null)
 				? this.matrizAdjacencia[vertice1][vertice2].getDistancia()
-				: 0;
+				: -1;
 	}
 
 	public int getPreco(int vertice1, int vertice2) {

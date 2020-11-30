@@ -21,7 +21,7 @@ import javafx.util.Pair;
  *
  * @author Jonathan Douglas Diego Tavares
  */
-public class Heuristica {
+public class Problema3HeuristicaSecundaria {
 
 	// Atributos
 	private final Problema problema; // atributo que carrega a instância do problema
@@ -32,7 +32,7 @@ public class Heuristica {
 	 *
 	 * @param problema
 	 */
-	public Heuristica(Problema problema) {
+	public Problema3HeuristicaSecundaria(Problema problema) {
 		this.problema = problema;
 		solucao = new Solucao();
 	}

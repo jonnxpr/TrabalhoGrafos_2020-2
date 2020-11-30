@@ -1,11 +1,14 @@
 package Algoritmos;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import Modelagem.Grafo;
 import Modelagem.Permutacoes;
 //Importações
 import Modelagem.Problema;
 import Modelagem.Solucao;
+import javafx.util.Pair;
 
 /**
  * Classe ForcaBruta Implementa o algoritmo de força bruta
@@ -25,6 +28,7 @@ public class Problema1ForcaBruta {
 	private final Solucao solucao; // atributo que carrega a solução obtida ao final da solução do problema
 	ArrayList<int[]> caminhos; // conjunto de caminhos obtidos na solução do problema
 	Permutacoes permutacoes; // conjunto de permutações geradas para verificar os caminhos possíveis
+	private int[] verticePredecessorLargura;
 
 	/**
 	 * Construtor
@@ -93,20 +97,21 @@ public class Problema1ForcaBruta {
 		return caminhosCompletos;
 	}
 
-	private ArrayList<int[]> removerPermIndesejada(int aeroportoInicial, int aeroportoFinal, ArrayList<int[]> array) {
+	private ArrayList<int[]> removerPermIndesejada(ArrayList<int[]> array) {
 
 		for (int i = 0; i < array.size(); i++) {
 			for (int j = 0; j < problema.getGrafo().numVertices() - 2; j++) {
-				//System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " + array.get(i)[j + 1]);
-				//System.out.println(problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1]));
+				// System.out.println("\ni = " + i + " j = " + array.get(i)[j] + " j + 1 = " +
+				// array.get(i)[j]);
+				// System.out.println(problema.getGrafo().existeAresta(array.get(i)[j],
+				// array.get(i)[j + 1]));
 				// System.out.println("\n i = " + i + " Antes");
 				// imprime(array);
-				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])
-						|| !problema.getGrafo().existeAresta(array.get(i)[j + 1], array.get(i)[j])) {
-					//System.out.println("vetor removido: ");
-					//imprimeVetor(array.get(i));
+				if (!problema.getGrafo().existeAresta(array.get(i)[j], array.get(i)[j + 1])) {
+					System.out.println("vetor removido: ");
+					imprimeVetor(array.get(i));
 					array.remove(array.get(i));
-					//System.out.println("\n i = " + i + " Depois");
+					// System.out.println("\n i = " + i + " Depois");
 					i--;
 					imprime(array);
 					break;
@@ -153,50 +158,63 @@ public class Problema1ForcaBruta {
 	 */
 	private void calculaMenorCaminho(int aeroportoInicial, int aeroportoFinal) {
 		// gera todas as permutações
-		//System.out.println("aeroInicial = " + aeroportoInicial + "\naeroFinal =" + aeroportoFinal);
-		caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
-		//System.out.println("\n\nperminiciais\n\n");
-		//imprime(caminhos);
-		// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
-		// para a mesma
-		ArrayList<int[]> caminhosDesejados = removerPermIndesejada(aeroportoInicial, aeroportoFinal, caminhos);
-		System.out.println("\n\nCaminhos Des: \n\n");
-		System.out.println("\n\nCaminhos Comp: \n\n");
-		imprime(caminhosDesejados);
-		caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
-		imprime(caminhosDesejados);
-		System.out.println("tamDesej =" + caminhosDesejados.size() );
-		System.out.println(caminhosDesejados.isEmpty());
+		// System.out.println("aeroInicial = " + aeroportoInicial + "\naeroFinal =" +
+		// aeroportoFinal);
 
-		int menorCaminho[] = caminhosDesejados.get(0);
-		ArrayList<Integer> menorCaminhoList = new ArrayList<>();
-		// imprime(caminhosDesejados);
+		System.out.println("Matriz de adj:\n");
+		problema.getGrafo().imprimeMatrizAdj();
 
-		// percorre o conjunto de caminhos comparando suas distâncias totais
-		// o menor caminho será aquele cuja distância total tenha o menor valor dentre
-		// o conjunto verificado
-		for (int i = 1; i < caminhosDesejados.size(); i++) {
-			if (getDistanciaCaminho(caminhosDesejados.get(i), aeroportoFinal) < getDistanciaCaminho(menorCaminho,
-					aeroportoFinal)) {
-				menorCaminho = caminhosDesejados.get(i);
+		if (aeroportoInicial != aeroportoFinal) {
+			caminhos = permutacoes.getPermutacoes(geraPermutacaoInicial(aeroportoInicial));
+			// System.out.println("\n\nperminiciais\n\n");
+			// imprime(caminhos);
+			// completa os caminhos de forma a ser possível sair da cidade inicial e voltar
+			// para a mesma
+			ArrayList<int[]> caminhosDesejados = removerPermIndesejada(caminhos);
+			System.out.println("\n\nCaminhos Desesejados: \n\n");
+			imprime(caminhosDesejados);
+			caminhosDesejados = completarCaminhos(aeroportoInicial, aeroportoFinal, caminhosDesejados);
+			System.out.println("\n\nCaminhos Completos: \n\n");
+			imprime(caminhosDesejados);
+			System.out.println("tamDesej =" + caminhosDesejados.size());
+			System.out.println(caminhosDesejados.isEmpty());
+
+			int menorCaminho[] = caminhosDesejados.get(0);
+			ArrayList<Integer> menorCaminhoList = new ArrayList<>();
+			// imprime(caminhosDesejados);
+
+			// percorre o conjunto de caminhos comparando suas distâncias totais
+			// o menor caminho será aquele cuja distância total tenha o menor valor dentre
+			// o conjunto verificado
+			for (int i = 1; i < caminhosDesejados.size(); i++) {
+				if (getDistanciaCaminho(caminhosDesejados.get(i), aeroportoFinal) < getDistanciaCaminho(menorCaminho,
+						aeroportoFinal)) {
+					menorCaminho = caminhosDesejados.get(i);
+				}
 			}
-		}
 
-		// passa os vértices obtidos do menor caminho para um ArrayList que será
-		// passado para a solução
-		for (int i = 0; i < menorCaminho.length; i++) {
-			if (menorCaminho[i] == aeroportoFinal) {
+			// passa os vértices obtidos do menor caminho para um ArrayList que será
+			// passado para a solução
+			for (int i = 0; i < menorCaminho.length; i++) {
+				if (menorCaminho[i] == aeroportoFinal) {
+					menorCaminhoList.add(menorCaminho[i]);
+					break;
+				}
 				menorCaminhoList.add(menorCaminho[i]);
-				break;
 			}
-			menorCaminhoList.add(menorCaminho[i]);
+
+			// seta o melhor caminho obtido na solução
+			solucao.setCaminho(menorCaminhoList);
+			// solucao.mostrarCaminho();
+			// seta a distância total obtida no melhor caminho
+			solucao.setDistanciaTotal(getDistanciaCaminho(menorCaminho, aeroportoFinal));
+		} else {
+			ArrayList<Integer> menorCaminhoList = new ArrayList<>();
+			menorCaminhoList.add(aeroportoInicial);
+			solucao.setCaminho(menorCaminhoList);
+			solucao.setDistanciaTotal(0);
 		}
 
-		// seta o melhor caminho obtido na solução
-		solucao.setCaminho(menorCaminhoList);
-		// solucao.mostrarCaminho();
-		// seta a distância total obtida no melhor caminho
-		solucao.setDistanciaTotal(getDistanciaCaminho(menorCaminho, aeroportoFinal));
 	}
 
 	/**
@@ -205,7 +223,6 @@ public class Problema1ForcaBruta {
 	 *
 	 * @param arrayList
 	 */
-	@SuppressWarnings("unused")
 	private void imprime(ArrayList<int[]> arrayList) {
 		for (int i = 0; i < arrayList.size(); i++) {
 			for (int j = 0; j < arrayList.get(i).length; j++) {
@@ -224,5 +241,110 @@ public class Problema1ForcaBruta {
 	public Solucao getSolucao(int aeroportoInicial, int aeroportoFinal) {
 		calculaMenorCaminho(aeroportoInicial, aeroportoFinal);
 		return solucao;
+	}
+
+	/**
+	 * ********************************************************************* BUSCA
+	 * EM LARGURA
+	 *********************************************************************
+	 */
+
+	/**
+	 * Método iniciaBuscaEmLargura, responsável por inicializar o array de
+	 * vértices predecessores a ser preenchido durante a busca.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return booleano indicando se existe um caminho entre o vértice inicial e
+	 *         final
+	 */
+	public boolean iniciaBuscaEmLargura(int verticeInicial, int verticeFinal) {
+		verticePredecessorLargura = new int[problema.getGrafo().numVertices()];
+		int tamanhoVetor = verticePredecessorLargura.length;
+
+		// Percorre o vetor de distâncias inicializando todas as posições com o valor
+		// V+1
+		for (int i = 0; i < tamanhoVetor; i++) {
+			// diz que o predecessor não existe ainda
+			verticePredecessorLargura[i] = -1;
+		}
+		// chama a busca em profundidade
+		return buscaLargura(verticeInicial, verticeFinal);
+	}
+
+	/**
+	 * Método buscaLargura, responsável por efetuar a busca em largura a partir de
+	 * um vértice inicial até o vértice final utilizando uma fila de vértices a
+	 * serem conhecidos e um vetor de vértices já visitados.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return
+	 */
+	private boolean buscaLargura(int verticeInicial, int verticeFinal) {
+		Grafo grafo = problema.getGrafo();
+		boolean visitados[] = new boolean[grafo.numVertices()];
+
+		// seta os vértices como não visitados
+		for (int i = 0; i < visitados.length; i++) {
+			visitados[i] = false;
+		}
+
+		// cria a lista de vértices a serem conhecidos
+		LinkedList<Integer> fila = new LinkedList<>();
+
+		// marca o vértice inicial como visitado
+		visitados[verticeInicial] = true;
+
+		// adiciona o vértice inicial na fila de vértices conhecidos
+		fila.add(verticeInicial);
+
+		// enquanto a fila de vértices conhecidos não estiver vazia
+		while (!fila.isEmpty()) {
+			// pega o elemento presente no topo (posição inicial) da fila
+			int v = fila.poll();
+			// System.out.println("vAtual = " + v);
+
+			// obtém a lista de adjacência do vértice obtido da fila
+			ArrayList<Integer> listaAdj = grafo.listaDeAdjacencia(v);
+
+			// percorre a lista de adjacência
+			for (int w = 0; w < listaAdj.size(); w++) {
+				// se o vértice atual não foi visitado ainda, então o visite,
+				// marque que foi visitado e o adicione na lista de vértices a serem conhecidos
+				// seta também o vértice predecessor
+				if (visitados[listaAdj.get(w)] == false) {
+					visitados[listaAdj.get(w)] = true;
+					fila.add(listaAdj.get(w));
+
+					verticePredecessorLargura[listaAdj.get(w)] = v;
+				}
+			}
+		}
+
+		// retorna se existe um caminho entre o vértice final e inicial
+		return (visitados[verticeFinal] == true);
+	}
+
+	/**
+	 * Método obtemCaminhoLargura, responsável por obter o caminho enter o
+	 * vértice inicial e final da busca baseado no array de vértice predecessor
+	 * resultante da busca.
+	 * 
+	 * @param verticeInicial
+	 * @param verticeFinal
+	 * @return ArrayList de Pair contendo o caminho obtido da busca em largura entre
+	 *         o vértice inicial e final
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ArrayList<Pair<Integer, Integer>> obtemCaminhoLargura(int verticeInicial, int verticeFinal) {
+		ArrayList<Pair<Integer, Integer>> caminho = new ArrayList<>();
+		int controle = verticeFinal;
+
+		while (controle != verticeInicial) {
+			caminho.add(new Pair(verticePredecessorLargura[controle], controle));
+			controle = verticePredecessorLargura[controle];
+		}
+		return caminho;
 	}
 }

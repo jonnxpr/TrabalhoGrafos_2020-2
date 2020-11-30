@@ -84,12 +84,17 @@ public class Solucao {
 	/**
 	 * Imprime o caminho solução
 	 */
-	public void mostrarCaminho() {
+	public String mostrarCaminho() {
+		String caminhoRet = "Caminho: ";
 		System.out.println("Caminho:");
 		for (Integer i : caminho) {
+			caminhoRet += i + " ";
 			System.out.print(i + " ");
 		}
+		caminhoRet += "\n";
 		System.out.println("");
+
+		return caminhoRet;
 	}
 
 	/**

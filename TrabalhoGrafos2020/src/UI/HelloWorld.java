@@ -2,9 +2,6 @@ package UI;
 
 import javax.swing.JFrame;
 
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
-
 public class HelloWorld extends JFrame {
 
 	/**
